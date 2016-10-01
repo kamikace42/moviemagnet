@@ -1,21 +1,678 @@
-jQuery(document).ready(function(){function p(){$(".container").hide("fade",function(){$(".landing").show();$("#buscar").focus();$("#buscar").val("");$(".info").empty()})}function k(){0<$(".seeders").length&&$("table").tablesorter({sortList:[[2,1]]})}function n(){$("#ui-id-1").hide();$(".container").fadeIn("slow");$(".loader").hide();k()}function x(a){var f;jQuery.getJSON("https://www.googleapis.com/youtube/v3/search?part=snippet&key=AIzaSyC8RTwNE44rIIa_it00jG_Q3J60A4UIP4I",{q:a+"+official+trailer"},
-function(a,c){console.log(a);console.log(a.items[0].id.videoId);f=a.items[0].id.videoId;$("#trailer").append('<a class="trailer fancybox.iframe" href="https://www.youtube.com/embed/'+f+'?autoplay=1" original-title="Watch trailer"><img src="images/trailer.png"></a>')})}function q(){document.getElementById("RARBG").checked&&(document.getElementById("expert").checked&&(d=e,b=""),jQuery.ajax({url:"https://torrentapi.org/pubapi_v2.php?get_token=get_token",type:"GET",dataType:"json"}).done(function(a){console.log("success");
-var f=a.token;jQuery.ajax({url:"https://torrentapi.org/pubapi_v2.php?mode=search&format=json_extended&sort=seeders&ranked=0&search_string="+encodeURI(d)+"%20"+b+"&token="+f+"&b=4&f=norefer",type:"GET",dataType:"json"}).done(function(a){console.log("success");if("No results found"===a.error||10===a.error_code)$("#enlaces").append("<p>No results found in RARBG</p>");else if("Invalid token set!"===a.error||"Invalid token. Use get_token for a new one!"===a.error)console.log("invalid token"),
-f="",q();else{for(var c in a.torrent_results){var b=parseFloat(a.torrent_results[c].size/1E9).toFixed(2);$("tbody").append("<tr><td><a href="+a.torrent_results[c].download+">"+a.torrent_results[c].title+'</a></td><td class="size"> '+b+'  GiB </td><td class="seeders"> '+a.torrent_results[c].seeders+'</td><td class="leechers"> '+a.torrent_results[c].leechers+"</td></tr>")}$("table").trigger("update");k()}}).fail(function(){console.log("error")}).always(function(){})}).fail(function(){console.log("error")}).always(function(a){console.log("complete");
-console.log(a)}))}function r(){document.getElementById("TPB").checked&&(document.getElementById("expert").checked&&(d=e,b=""),$.ajax({url:"https://thepiratebay.org/search/"+encodeURI(d)+" "+b+"/0/99/200",type:"GET",dataType:"html"}).done(function(a){console.log("success");if($(a).find(".detName"))if("Database maintenance, please check back in 10 minutes."===a)$("#enlaces").append("<p>thepiratebay database maintenance</p>");else{var f=$(a).find(".detName").next();$(a).find(".detName");
-var b=$(a).find(".detLink"),c=$(a).find("font.detDesc"),l=$(a).find("td[align='right']:even"),g=$(a).find("td[align='right']:odd");$(b).each(function(a,t){var b=$(this).text(),d=c[a].textContent.split(/[\s,]+/),y=l[a].textContent,e=g[a].textContent;$("tbody").append("<tr><td><a href="+f[a]+">"+b+'</a></a></td><td class="size"> '+d[4]+" "+d[5]+' </span></td><td class="seeders">'+y+'</td><td class="leechers">'+e+"</td></tr>")});$("table").trigger("update");k()}else $("#enlaces").append("<p>No results found in thepiratebay</p>")}).fail(function(a){console.log("error")}).always(function(a,
-f){console.log("complete")}))}function u(){document.getElementById("TP").checked&&(document.getElementById("expert").checked&&(d=e,b=""),$.ajax({url:"https://torrentproject.se/?s="+encodeURI(d)+"+"+b+"&filter=2000&hl=en&safe=on&num=20&start=0&orderby=best",type:"GET",dataType:"html"}).done(function(a){console.log("success");if($(a).find(".torrent")){$(a).find(".torrent");var f=$(a).find("h3 a"),b=$(a).find("div span span b:even"),c=$(a).find("div span span b:odd");$(a).find("a.l.tl");
-var d=$(a).find("span.bc.torrent-size"),g;$(a).find("h3 a").each(function(a,t){g=$(t).attr("href").split("/");$("tbody").append('<tr><td><a href="magnet:?xt=urn:btih:'+g[1]+'&tr=udp://tracker.opentrackr.org:1337&tr=udp://tracker.coppersurfer.tk:6969&tr=udp://9.rarbg.to:2710&tr=udp://tracker.leechers-paradise.org:6969/announce/">'+f[a].text+'</a></td><td class="size"> '+d[a].textContent+'</td><td class="seeders"> '+b[a].textContent+'</td><td class="leechers"> '+c[a].textContent+"</td></tr>")});$("table").trigger("update");
-k()}else $("#enlaces").append("<p>No results found in TorrentProject</p>")}).fail(function(){console.log("error")}).always(function(){console.log("complete")}))}function v(){document.getElementById("TZ2").checked&&(document.getElementById("expert").checked&&(d=e,b=""),$.ajax({url:"https://torrentz2.eu/search?f="+d+" "+b+"+video",type:"GET",dataType:"html"}).done(function(a){console.log("success");$(a).find("dl");var b=$(a).find("dt a");b.attr("href");$(a).find("dd");var d=$(a).find("dd span:nth-child(3)"),
-c=$(a).find("dd span:nth-child(4)"),e=$(a).find("dd span:nth-child(5)");$(a).find("dt a").each(function(a,z){$("tbody").append('<tr><td><a href="magnet:?xt=urn:btih:'+$(z).attr("href").replace(/\//g,"")+'&tr=udp://tracker.opentrackr.org:1337&tr=udp://tracker.coppersurfer.tk:6969&tr=udp://9.rarbg.to:2710&tr=udp://tracker.leechers-paradise.org:6969/announce/">'+b[a].textContent+'</a></td><td class="size"> '+d[a].textContent+'</td><td class="seeders"> '+c[a].textContent+'</td><td class="leechers"> '+
-e[a].textContent+"</td></tr>")})}).fail(function(){console.log("error")}).always(function(){console.log("complete")}))}function w(){console.log("consulta");setTimeout(function(){"block"!==$(".landing").css("display")&&n()},5E3);$(".landing").hide();$(".info").empty();$(".loader").show();$("#ui-id-1").hide();$(".ui-autocomplete-loading").removeClass("ui-autocomplete-loading");e=$("#buscar").val();document.getElementById("expert").checked?b="":4===e.replace(/^\D+/g,"").length?(b=e.replace(/^\D+/g,""),
-e=e.match(/^\D+/g)):b="";jQuery(document).ready(function(a){a.ajax({url:"https://yandex.com/search/xml?user=kamikace&key=03.409040134:43ae31eeeefc88dbf9bde86ebe6ec5ec&sortby=rlv&l10n=en&query=site%3Aimdb.com+"+encodeURI(e)+"+"+b,type:"GET",dataType:"xml"}).done(function(f){console.log("success");console.log(f);var e=[];a(f).find("url").each(function(b,c){e.push(a(this).text())});var c=e[0].split("/");h="undefined"===typeof c[4]?"tt"+e[0].split("?")[1]:c[4];var l=[],g=[];"nm"===h.replace(/[0-9]/g,
-"")&&(m="person",console.log("bien"),a(f).find("passages").each(function(b,c){console.log(this);l.push(a(this).text())}),a(f).find("title").each(function(b,c){console.log(this);g.push(a(this).text())}),console.log(l[0]),console.log(g[0]),a("#titulo").append(g[0]),a("#descripcion").append(l[0]),a.ajax({url:"https://www.imdb.com/name/"+h+"/",type:"GET",dataType:"html"}).done(function(b){console.log("success");a(b).find("#name-poster").clone().appendTo("#poster")}));console.log(h);jQuery.ajax({url:"https://www.omdbapi.com/?i="+
-h+"&plot=full&r=json",type:"GET",dataType:"json"}).done(function(c){console.log("success");"False"===c.Response||"game"===c.Type?(document.getElementById("expert").checked&&(a("#enlaces").append('<table class="tablesorter"><thead><tr><th>Links</th><th>Size</th><th>Seeds</th><th>Leechs</th></tr></thead><tbody></tbody></table>'),q(),r(),u(),v(),a(document).ajaxStop(function(){k();a("table").stacktable();n();a(this).unbind("ajaxStop")})),"person"!=m&&a("#titulo").append("<p>No results found</p>"),n()):
-(h=c.imdbID,d=c.Title,b=c.Year,m=c.Type,a("#titulo").append("<h1>"+d+" ("+b+")</h1>"),a("#descripcion").append('<p style="text-align:center;">'+c.Runtime+" | "+c.Genre+" | "+c.imdbRating+"</p>"),a("#nota").append('<span class="imdbRatingPlugin imdbRatingStyle1" data-user="ur64023610" data-title="tt0591328" data-style="p1"><a href="https://www.imdb.com/title/'+h+'/?ref_=plg_rt_1"><img src="https://g-ecx.images-amazon.com/images/G/01/imdb/plugins/rating/images/imdb_46x22.png"></a><span class="rating">'+
-c.imdbRating+'<span class="ofTen">/10</span></span><img src="https://g-ecx.images-amazon.com/images/G/01/imdb/plugins/rating/images/imdb_star_22x21.png" class="star"></span>'),a("#descripcion").append("<p>"+c.Plot+"</p>"),x(d+" "+b),jQuery.ajax({url:"https://api.themoviedb.org/3/find/"+h+"?external_source=imdb_id&api_key=15d2ea6d0dc1d476efbca3eba2b9bbfb",type:"GET",dataType:"json"}).done(function(c){console.log("success");"movie"===m?(null===c.movie_results[0].poster_path&&a("#poster").append("No poster found"),
-a("#poster").append('<img src="https://image.tmdb.org/t/p/w500'+c.movie_results[0].poster_path+'">')):"series"===m?(null===c.tv_results[0].poster_path&&a("#poster").append("No poster found"),a("#poster").append('<img src="https://image.tmdb.org/t/p/w500'+c.tv_results[0].poster_path+'">')):a("#poster").append("No poster found")}).fail(function(){console.log("error")}).always(function(){console.log("complete")}),a("#enlaces").append('<table class="tablesorter"><thead><tr><th>Links</th><th>Size</th><th>Seeds</th><th>Leechs</th></tr></thead><tbody></tbody></table>'),
-q(),r(),u(),v(),a(document).ajaxStop(function(){k();a("table").stacktable();n();a(this).unbind("ajaxStop")}))}).fail(function(){console.log("error")}).always(function(a){console.log("complete");console.log(a)})}).fail(function(){console.log("error")}).always(function(){console.log("complete")})})}var h,d,b,e,m;(function(){$(document.body).on("keyup",function(a){13==a.keyCode&&($("#ui-id-1").hide(),""===$("input").val()?($(".ui-autocomplete-loading").removeClass("ui-autocomplete-loading"),$(".info").empty()):
-w())})})();(function(){jQuery.ui.autocomplete.prototype._resizeMenu=function(){this.menu.element.outerWidth(this.element.outerWidth())};$("#buscar").autocomplete({minLength:2,delay:200,select:function(a,b){a.preventDefault();$(this).val(b.item.value);13!=a.keyCode&&w()},source:function(a,b){$.ajax({url:"https://www.imdb.com/xml/find?json=1&nr=1&tt=on",type:"GET",dataType:"json",data:{q:a.term},success:function(a){var c=[],d=[],e;jQuery.isEmptyObject(a)?c.push("Try again"):$.each(a,function(a,
-b){for(var d=0;10>d;d++)b[d]&&!b[d].description.match(/game/g)&&(b[d].description.match(/\b(19|20)\d{2}\b/)?(e=b[d].description.match(/\b(19|20)\d{2}\b/),c.push(he.decode(b[d].title)+" "+e[0])):c.push(he.decode(b[d].title)))});$.each(c,function(a,b){-1===$.inArray(b,d)&&d.push(b)});b(d)}})}});$('input[type="checkbox"][name="servidor"]').on("change",function(){if(!$('input[type="checkbox"][name="servidor"]:checked').map(function(){return this.value}).toArray().length)return $(this).prop("checked",
-!0),!1})})();$("#return").on("click",function(){p();console.log("asd")});$(document.body).on("keyup",function(a){27==a.keyCode&&p();8!=a.keyCode||$("#buscar").is(":focus")||p()});$(".trailer").fancybox()});
+//TO DO
+//          subtitulos?
+//          descripcion del torrent, info de la pagina
+//          actualizar semillas tiempo real - bitsnoop/boton
+//          scroll top
+//          check duplicates magnet http://jsfiddle.net/wke3Laej/
+//          https://torrentproject.se/api
+//          https://bitsnoop.com/info/api.html
+//          https://zooqle.com/help/api.html
+//          http://www.magnetdl.com/t/the-hobbit-2012/se/desc/
+//          http://www.idope.se/torrent/Now You See Me 2 2016/
+//          https://kickass.unblocked.live/search.php?q=the+matrix+1999
+//          https://torrentz2.eu/search?f=movies%20the%20matrix%201999
+//          http://www.torrenthound.com/search/1/The+matrix+1999/seeds:desc
+//          capa opaca mientras carga
+//          load more links
+//          no links found- quitar tabla, ej The Scene
+//          random movie http://codepen.io/yigitbiber/pen/JFpvc
+//                       http://www.imdb.com/random/title   https://moviemagnet.net/random
+//          popular movies https://torrentfreak.com/category/dvdrip/feed/
+//          contador de tiempo - something went wrong si pantalla vacia
+//          mejorar sistema actores/directores wiki? http://www.imdb.com/name/nm0000040/
+
+
+
+jQuery(document).ready(function() {
+    var imdb;
+    var title;
+    var year;
+    var busqueda;
+    var type;
+    searchEnter();
+    autocompletar();
+
+    
+
+    //return
+    function volver() {
+        // $('section').hide("fold", { size: 65 }, 600, function() {
+        $('.container').hide("fade", function() {
+            $('.landing').show();
+            $("#buscar").focus();
+            $("#buscar").val("");
+            $('.info').empty();
+
+        });
+
+
+    }
+    //click en la X
+    $("#return").on('click', function() {
+        volver();
+        console.log("asd");
+    });
+    //pulsar escape o retroceso
+    $(document.body).on('keyup', function(event) {
+        if (event.keyCode == 27) {
+            volver();
+        }
+        if (event.keyCode == 8 && !$("#buscar").is(":focus")) {
+            volver();
+        }
+    });
+
+    //busqueda por enter
+    function searchEnter() {
+        $(document.body).on('keyup', function(event) {
+            if (event.keyCode == 13) { // 13 = Enter Key
+                $('#ui-id-1').hide();
+                if ($('input').val() === "") {
+                    $('.ui-autocomplete-loading').removeClass('ui-autocomplete-loading');
+                    $('.info').empty();
+                } else {
+                    consulta();
+                }
+            }
+        });
+    }
+
+
+    //vaciar
+    /*$("#buscar").on('keyup change copy paste cut', function(e) {
+        if (this.value.length === 0) {
+            $('section').fadeOut('slow/400/fast', function() {
+                $('section div').empty();
+            });
+            
+        }
+    });*/
+    //ordenar y construir tabla
+    function sortTable() {
+        if ($('.seeders').length > 0) {
+            $("table").tablesorter({
+                sortList: [
+                    [2, 1]
+                ]
+            });
+        }
+    }
+    //reinicio tras busqueda
+    function exit() {
+        $('#ui-id-1').hide();
+        $('.container').fadeIn('slow');
+
+        $('.loader').hide();
+        sortTable();
+        //auto scroll
+        /*$('html, body').animate({
+            scrollTop: $('#titulo').offset().top
+        }, 0);*/
+    }
+    //sugerencias busqueda
+    function autocompletar() {
+
+        jQuery.ui.autocomplete.prototype._resizeMenu = function() {
+            var ul = this.menu.element;
+            ul.outerWidth(this.element.outerWidth());
+        };
+        $("#buscar").autocomplete({
+            minLength: 2,
+            delay: 200,
+            select: function(event, ui) {
+                event.preventDefault();
+                $(this).val(ui.item.value);
+                if (event.keyCode == 13) {
+                    return;
+                } else {
+                    consulta();
+                }
+            },
+            source: function(request, response) {
+                $.ajax({
+                    url: "ajaxproxy.php?http://www.imdb.com/xml/find?json=1&nr=1&tt=on",
+                    type: 'GET',
+                    dataType: "json",
+                    data: {
+                        q: request.term
+                    },
+                    success: function(data) {
+                        var sugerencias = [];
+                        var sugerenciasFiltro = [];
+                        var descripcion;
+                        var year;
+                        if (!jQuery.isEmptyObject(data)) {
+                            $.each(data, function(index, val) {
+                                for (var i = 0; i < 10; i++) {
+                                    if (val[i] && !val[i].description.match(/game/g)) {
+                                        if (val[i].description.match(/\b(19|20)\d{2}\b/)) {
+                                            year = val[i].description.match(/\b(19|20)\d{2}\b/);
+                                            sugerencias.push(he.decode(val[i].title) + ' ' + year[0]);
+                                        } else {
+                                            sugerencias.push(he.decode(val[i].title));
+                                        }
+                                    }
+
+                                }
+                            });
+
+                        } else {
+                            sugerencias.push('Try again');
+                        }
+
+                        $.each(sugerencias, function(i, el) {
+                            if ($.inArray(el, sugerenciasFiltro) === -1) sugerenciasFiltro.push(el);
+                        });
+                        response(sugerenciasFiltro);
+                    }
+                });
+            }
+        });
+        //bloqueo checkbox
+        $('input[type="checkbox"][name="servidor"]').on('change', function() {
+            var getArrVal = $('input[type="checkbox"][name="servidor"]:checked').map(function() {
+                return this.value;
+            }).toArray();
+            if (!getArrVal.length) {
+                $(this).prop("checked", true);
+                return false;
+            }
+
+        });
+
+    }
+    //trailer
+    $(".trailer").fancybox();
+
+    function trailer(title) {
+
+        var video;
+        jQuery.getJSON('https://www.googleapis.com/youtube/v3/search?part=snippet&key=AIzaSyC8RTwNE44rIIa_it00jG_Q3J60A4UIP4I', {
+            q: title + '+official+trailer'
+        }, function(json, textStatus) {
+            console.log(json);
+            console.log(json.items[0].id.videoId);
+            video = json.items[0].id.videoId;
+            $("#trailer").append('<a class="trailer fancybox.iframe" href="https://www.youtube.com/embed/' + video + '?autoplay=1" original-title="Watch trailer"><img src="images/trailer.png"></a>');
+        });
+
+    }
+    //nota imdb guay
+    function imdbNota(){
+        $("#nota").append('<span class="imdbRatingPlugin" data-user="ur68741226" data-title="'+imdb+' data-style="p1"><a href="http://www.imdb.com/title/'+imdb+'"><img src="http://g-ecx.images-amazon.com/images/G/01/imdb/plugins/rating/images/imdb_46x22.png" alt="'+ title+" "+year+' on IMDb" /></a></span>');
+        $.getScript('http://g-ec2.images-amazon.com/images/G/01/imdb/plugins/rating/js/rating.min.js');
+        $.getScript('http://p.media-imdb.com/static-content/documents/v1/title/'+imdb+'/ratings%3Fjsonp=imdb.rating.run:imdb.api.title.ratings/data.json?u=ur64023610&s=p2');
+    }
+
+
+
+    //busqueda secundaria imdb, no usada
+    function searchImdb() {
+        jQuery.getJSON('miniProxy.php?http://www.imdb.com/xml/find?json=1&nr=1&tt=on&q=' + busqueda, function(json, textStatus) {
+            if (!json.title_popular) {
+                $('#titulo').append('<p>No results found</p>');
+                exit();
+                return;
+            }
+            imdb = json.title_popular[0].id;
+            title = json.title_popular[0].title;
+            $('#titulo').append('<p>' + json.title_popular[0].title + ' ' + json.title_popular[0].description + '</p>');
+        });
+    }
+    // buscadores torrent
+    //rarbg
+    function searchRarbg() {
+        if (document.getElementById('RARBG').checked) {
+            //var url = 'http://torrentapi.org/pubapi_v2.php?mode=search&format=json_extended&sort=seeders&ranked=0&search_imdb=' + imdb + '&token=' + token;
+            if (document.getElementById('expert').checked) {
+                title = busqueda;
+                year = "";
+            }
+            //token
+            jQuery.ajax({
+                    url: 'ajaxproxy.php?http://torrentapi.org/pubapi_v2.php?get_token=get_token',
+                    type: 'GET',
+                    dataType: 'json',
+                })
+                .done(function(json) {
+                    console.log("success");
+                    var token = json.token;
+                    jQuery.ajax({
+                            //url: 'http://torrentapi.org/pubapi_v2.php?mode=search&format=json_extended&sort=seeders&ranked=0&search_imdb=' + imdb + '&token=' + token,
+                            url: 'ajaxproxy.php?http://torrentapi.org/pubapi_v2.php?mode=search&format=json_extended&sort=seeders&ranked=0&search_string=' + encodeURI(title) + '%20' + year + '&token=' + token + '&b=4&f=norefer',
+                            type: 'GET',
+                            dataType: 'json',
+                        })
+                        .done(function(json) {
+                            console.log("success");
+                            if (json.error === 'No results found' || json.error_code === 10) {
+                                $('#enlaces').append('<p>No results found in RARBG</p>');
+                                //exit();
+                                return;
+                            } else if (json.error === 'Invalid token set!' || json.error === 'Invalid token. Use get_token for a new one!') {
+                                console.log('invalid token');
+                                token = "";
+                                searchRarbg();
+                                return;
+                            } else {
+                                for (var i in json.torrent_results) {
+                                    var size = parseFloat(json.torrent_results[i].size / 1000000000).toFixed(2);
+                                    $('tbody').append('<tr><td><a href=' + json.torrent_results[i].download + '>' + json.torrent_results[i].title + '</a></td><td class="size">' + ' ' + size + '  GiB ' + '</td><td class="seeders">' + ' ' + json.torrent_results[i].seeders + '</td><td class="leechers">' + ' ' + json.torrent_results[i].leechers + '</td></tr>');
+                                }
+                                $("table").trigger("update");
+                                sortTable();
+                            }
+                        })
+                        .fail(function() {
+                            console.log("error");
+                        })
+                        .always(function() {
+
+                        });
+                })
+                .fail(function() {
+                    console.log("error");
+                })
+                .always(function(json) {
+                    console.log("complete");
+                    console.log(json);
+                });
+        }
+    }
+    //piratebay
+    function searchTpb() {
+        if (document.getElementById('TPB').checked) {
+            //arreglar error conexion, timeout?
+            if (document.getElementById('expert').checked) {
+                title = busqueda;
+                year = "";
+
+            }
+            $.ajax({
+                    //url: "ajaxproxy.php?url=https://thepiratebay.org/search/" + imdb,
+                    url: "ajaxproxy.php?https://thepiratebay.org/search/" + encodeURI(title) + ' ' + year + "/0/99/200",
+                    type: 'GET',
+                    dataType: 'html',
+
+                })
+                .done(function(data) {
+                    console.log("success");
+
+                    if (!$(data).find('.detName')) {
+                        $('#enlaces').append('<p>No results found in thepiratebay</p>');
+                        return;
+                    } else if (data === 'Database maintenance, please check back in 10 minutes.') {
+                        $('#enlaces').append('<p>thepiratebay database maintenance</p>');
+                        return;
+                    }
+                    var magnet = $(data).find('.detName').next();
+                    var detname = $(data).find('.detName');
+                    var detLink = $(data).find('.detLink');
+                    var detDesc = $(data).find('font.detDesc');
+                    var tds = $(data).find("td[align='right']:even");
+                    var tdl = $(data).find("td[align='right']:odd");
+
+                    $(detLink).each(function(index, el) {
+                        var title = $(this).text();
+                        var size = detDesc[index].textContent.split(/[\s,]+/);
+                        var seeds = tds[index].textContent;
+                        var leechs = tdl[index].textContent;
+                        $('tbody').append('<tr><td><a href=' + magnet[index] + '>' + title + '</a>' + '</a></td><td class="size">' + ' ' + size[4] + ' ' + size[5] + ' ' + '</span></td><td class="seeders">' + seeds + '</td><td class="leechers">' + leechs + '</td></tr>');
+
+                    });
+                    $("table").trigger("update");
+                    sortTable();
+                })
+                .fail(function(textContent) {
+                    console.log("error");
+                })
+                .always(function(xhr, status) {
+                    console.log("complete");
+                });
+        }
+    }
+    //torrent proyect
+    function searchTP() {
+        if (document.getElementById('TP').checked) {
+            if ((document.getElementById('expert').checked)) {
+                title = busqueda;
+                year = "";
+            }
+            /*$.ajax({
+                    //url: 'index.php?q=https://torrentproject.se/?s=' + title + '+' + year + '&out=json&filter=2000',
+                    url: 'asd/browse.php?u=https%3A%2F%2Ftorrentproject.se%2F%3Fs%3D' + title + '%2B' + year + '%26filter%3D2000%26orderby%3Dseeders%26out%3Djson',
+                    type: 'GET',
+                    dataType: 'json',
+                })
+                .done(function(json) {
+                    console.log("success");
+
+                    for (var i in json) {
+                        if (typeof json[i].torrent_hash != 'undefined') {
+                            var size = parseFloat(json[i].torrent_size / 1000000000).toFixed(2);
+                            $('tbody').append('<tr><td><a href=magnet:?xt=urn:' + json[i].torrent_hash + '&tr=udp://tracker.opentrackr.org:1337&tr=udp://tracker.coppersurfer.tk:6969&tr=udp://9.rarbg.to:2710' + '>' + json[i].title + '</a></td><td class="size">' + ' ' + size + '  GiB ' + '</td><td class="seeders">' + ' ' + json[i].seeds + '</td><td class="leechers">' + ' ' + json[i].leechs + '</td></tr>');
+                        }
+                    }
+                    $("table").trigger("update");
+                })
+                .fail(function(textStatus) {
+                    console.log("error");
+                    console.log(textStatus);
+                })
+                .always(function() {
+                    console.log("complete");
+                });*/
+            $.ajax({
+                    url: 'ajaxproxy.php?https://torrentproject.se/?s=' + encodeURI(title) + '+' + year + '&filter=2000&hl=en&safe=on&num=20&start=0&orderby=best',
+                    type: 'GET',
+                    dataType: 'html',
+                })
+                .done(function(data) {
+                    console.log("success");
+                    if (!$(data).find('.torrent')) {
+                        $('#enlaces').append('<p>No results found in TorrentProject</p>');
+                        // exit();
+                        return;
+                    }
+                    var torrent = $(data).find('.torrent');
+                    var title = $(data).find('h3 a');
+                    var seed = $(data).find('div span span b:even');
+                    var leech = $(data).find('div span span b:odd');
+                    var magnet = $(data).find('a.l.tl');
+                    var size = $(data).find('span.bc.torrent-size');
+                    var link;
+                    $(data).find('h3 a').each(function(index, el) {
+                        link = $(el).attr('href').split('/');
+                        $('tbody').append('<tr><td><a href="magnet:?xt=urn:btih:' + link[1] + '&tr=udp://tracker.opentrackr.org:1337&tr=udp://tracker.coppersurfer.tk:6969&tr=udp://9.rarbg.to:2710&tr=udp://tracker.leechers-paradise.org:6969/announce/">' + title[index].text + '</a></td><td class="size">' + ' ' + size[index].textContent + '</td><td class="seeders">' + ' ' + seed[index].textContent + '</td><td class="leechers">' + ' ' + leech[index].textContent + '</td></tr>');
+                    });
+                    $("table").trigger("update");
+                    sortTable();
+                })
+                .fail(function() {
+                    console.log("error");
+                })
+                .always(function() {
+                    console.log("complete");
+                });
+        }
+    }
+
+
+    function searchTZ2 (){
+         if (document.getElementById('TZ2').checked) {
+            if ((document.getElementById('expert').checked)) {
+                title = busqueda;
+                year = "";
+            }
+         $.ajax({
+            url: 'ajaxproxy.php?https://torrentz2.eu/search?f='+title+' '+year+'+video',
+            type: 'GET',
+            dataType: 'html',
+        })
+        .done(function(data) {
+            console.log("success");
+            var dl = $(data).find('dl');
+            var dt = $(data).find('dt a');
+            var magnet=dt.attr('href');
+            var dd = $(data).find('dd');
+            var size =$(data).find('dd span:nth-child(3)'); //size
+            var seed =$(data).find('dd span:nth-child(4)'); //seed
+            var leech =$(data).find('dd span:nth-child(5)'); //leech
+            $(data).find('dt a').each(function(index, val) {
+                /*console.log(dt[index].textContent); //title
+                console.log(dt.attr('href').replace(/\//g, "")); //enlace
+                console.log(size[index].textContent);
+                console.log(seed[index].textContent);
+                console.log(leech[index].textContent);*/
+                $('tbody').append('<tr><td><a href="magnet:?xt=urn:btih:' + $(val).attr('href').replace(/\//g, "") + '&tr=udp://tracker.opentrackr.org:1337&tr=udp://tracker.coppersurfer.tk:6969&tr=udp://9.rarbg.to:2710&tr=udp://tracker.leechers-paradise.org:6969/announce/">' + dt[index].textContent + '</a></td><td class="size">' + ' ' + size[index].textContent + '</td><td class="seeders">' + ' ' + seed[index].textContent + '</td><td class="leechers">' + ' ' + leech[index].textContent + '</td></tr>');
+
+                
+            });
+
+        })
+        .fail(function() {
+            console.log("error");
+        })
+        .always(function() {
+            console.log("complete");
+        });
+    }
+}
+
+    function consulta() {
+        console.log('consulta');
+        setTimeout(function() { //temporizador
+            if ($('.landing').css('display') === 'block') {
+                return;
+            } else {
+                exit();
+            }
+
+
+        }, 5000);
+        $('.landing').hide();
+        $('.info').empty();
+        $('.loader').show();
+        $('#ui-id-1').hide();
+        $('.ui-autocomplete-loading').removeClass('ui-autocomplete-loading');
+
+
+        busqueda = $('#buscar').val();
+        //punto coma año
+        //var a = 'ABCs.Of.Death.2.5.2016'; //separar por punto y espacio
+        //var b = a.split(/\s|\./);
+        if (!(document.getElementById('expert').checked)) {
+            if (busqueda.replace(/^\D+/g, '').length === 4) {
+                year = busqueda.replace(/^\D+/g, '');
+                busqueda = busqueda.match(/^\D+/g);
+            } else {
+                year = "";
+            }
+        } else {
+            year = "";
+        }
+
+        //busqueda yandex 
+        jQuery(document).ready(function($) {
+            $.ajax({
+                    url: 'ajaxproxy.php?https://yandex.com/search/xml?user=kamikace&key=03.409040134:43ae31eeeefc88dbf9bde86ebe6ec5ec&sortby=rlv&l10n=en&query=site%3Aimdb.com+' + encodeURI(busqueda) + '+' + year,
+                    type: 'GET',
+                    dataType: 'xml',
+                })
+                .done(function(data) {
+                    console.log("success");
+                    console.log(data);
+                    var dir = [];
+                    $(data).find('url').each(function(data, index) {
+
+                        dir.push($(this).text());
+                    });
+                    var a = dir[0].split('/');
+
+                    //id imdb  console.log(a[4]); 
+                    if (typeof a[4] === 'undefined') {
+                        var b = dir[0].split('?'); //otro tipo url Title?0234215
+                        imdb = 'tt' + b[1];
+                    } else {
+                        imdb = a[4];
+                    }
+                    //Extraer info actor/director
+                    var asd = imdb.replace(/[0-9]/g, '');
+                    var desc = [];
+                    var name = [];
+                    if (asd === 'nm') {
+                        type = 'person';
+                        console.log('bien');
+                        $(data).find('passages').each(function(xml, index) {
+                            console.log(this);
+                            desc.push($(this).text());
+
+                        });
+                        $(data).find('title').each(function(xml, index) {
+                            console.log(this);
+                            name.push($(this).text());
+
+                        });
+                        console.log(desc[0]);
+                        console.log(name[0]);
+                        $('#titulo').append(name[0]);
+                        $('#descripcion').append(desc[0]);
+                        $.ajax({ //foto del actor
+                                url: 'ajaxproxy.php?http://www.imdb.com/name/' + imdb + '/',
+                                type: 'GET',
+                                dataType: 'html',
+                            })
+                            .done(function(img) {
+                                console.log("success");
+                                $(img).find('#name-poster').clone().appendTo("#poster");
+                            });
+
+                    }
+
+                    console.log(imdb);
+
+                    //busqueda en omdbapi titulo y año
+                    jQuery.ajax({
+                            //url: 'proxy.php?url=http://www.imdb.com/xml/find?json=1&nr=1&tt=on&q=matrix',
+                            url: 'http://www.omdbapi.com/?i=' + imdb + '&plot=full&r=json',
+                            type: 'GET',
+                            dataType: 'json',
+
+                        })
+                        .done(function(json) {
+                            console.log("success");
+                            if (json.Response === 'False' || json.Type === 'game') {
+                                if (document.getElementById('expert').checked) {
+                                    $('#enlaces').append('<table class="tablesorter"><thead><tr><th>Links</th><th>Size</th><th>Seeds</th><th>Leechs</th></tr></thead><tbody></tbody></table>');
+                                    searchRarbg();
+                                    searchTpb();
+                                    searchTP();
+                                    searchTZ2();
+                                    //final ajax limpiar y ordenar tabla
+                                    $(document).ajaxStop(function() {
+                                        sortTable();
+                                        $('table').stacktable();
+                                        exit();
+                                        $(this).unbind("ajaxStop");
+
+                                    });
+                                }
+                                if (type != 'person') {
+                                    $('#titulo').append('<p>No results found</p>');
+
+                                }
+                                exit();
+                                return;
+                            }
+
+                            imdb = json.imdbID;
+                            title = json.Title;
+                            year = json.Year;
+                            type = json.Type;
+                            $('#titulo').append('<h1>' + title + ' ' + '(' + year + ')' + '</h1>');
+                            $('#descripcion').append('<p style="text-align:center;">' + json.Runtime + ' | ' + json.Genre + ' | ' + json.imdbRating + '</p>');
+                            $('#nota').append('<span class="imdbRatingPlugin imdbRatingStyle1" data-user="ur64023610" data-title="tt0591328" data-style="p1"><a href="http://www.imdb.com/title/'+imdb+'/?ref_=plg_rt_1"><img src="http://g-ecx.images-amazon.com/images/G/01/imdb/plugins/rating/images/imdb_46x22.png"></a><span class="rating">'+ json.imdbRating+'<span class="ofTen">/10</span></span><img src="http://g-ecx.images-amazon.com/images/G/01/imdb/plugins/rating/images/imdb_star_22x21.png" class="star"></span>');
+                            $('#descripcion').append('<p>' + json.Plot + '</p>');
+                            var video = title + " " + year;
+                            trailer(video);
+                            //imdbNota();
+                            //poster
+                            jQuery.ajax({
+                                    //url: 'https://api.themoviedb.org/3/search/movie?api_key=15d2ea6d0dc1d476efbca3eba2b9bbfb&query=' + titulo,
+                                    url: 'https://api.themoviedb.org/3/find/' + imdb + '?external_source=imdb_id&api_key=15d2ea6d0dc1d476efbca3eba2b9bbfb',
+                                    type: 'GET',
+                                    dataType: 'json',
+                                })
+                                .done(function(json) {
+                                    console.log("success");
+                                    if (type === 'movie') {
+                                        if (json.movie_results[0].poster_path === null) {
+                                            $('#poster').append('No poster found');
+                                            // exit();
+                                            // return;
+                                        }
+                                        $('#poster').append('<img src="http://image.tmdb.org/t/p/w500' + json.movie_results[0].poster_path + '"\>');
+                                    } else if (type === 'series') {
+                                        if (json.tv_results[0].poster_path === null) {
+                                            $('#poster').append('No poster found');
+                                            // exit();
+                                            // return;
+                                        }
+                                        $('#poster').append('<img src="http://image.tmdb.org/t/p/w500' + json.tv_results[0].poster_path + '"\>');
+                                    } else {
+                                        $('#poster').append('No poster found');
+
+                                    }
+
+                                })
+                                .fail(function() {
+                                    console.log("error");
+                                })
+                                .always(function() {
+                                    console.log("complete");
+                                });
+                            //magnet
+                            //eleccion de servidor
+                            $('#enlaces').append('<table class="tablesorter"><thead><tr><th>Links</th><th>Size</th><th>Seeds</th><th>Leechs</th></tr></thead><tbody></tbody></table>');
+                            searchRarbg();
+                            searchTpb();
+                            searchTP();
+                            searchTZ2();
+                            //final ajax limpiar y ordenar tabla
+                            $(document).ajaxStop(function() {
+                                sortTable();
+                                $('table').stacktable();
+                                exit();
+                                $(this).unbind("ajaxStop");
+                            });
+
+                        })
+                        .fail(function() {
+                            console.log("error");
+                        })
+                        .always(function(json) {
+                            console.log("complete");
+                            console.log(json);
+                        });
+
+                })
+                .fail(function() {
+                    console.log("error");
+                })
+                .always(function() {
+                    console.log("complete");
+
+
+                });
+        });
+    }
+    //chorrada invaders
+    /*  var contador = 0;
+      $('.invToggle').click(function(event) {
+          $('.invader').toggle();
+          $('.contador').toggle();
+
+      });
+      animateDiv();
+      $('.invader').hover(function() {
+          animateDiv();
+      });
+      $('.invader').click(function(event) {
+          contador++;
+          $('.contador').html(contador);
+      });
+
+      function makeNewPosition() {
+          // Get viewport dimensions (remove the dimension of the div)
+          var h = $(window).height() - 50;
+          var w = $(window).width() - 50;
+          var nh = Math.floor(Math.random() * h);
+          var nw = Math.floor(Math.random() * w);
+          return [nh, nw];
+      }
+
+      function animateDiv() {
+          var newq = makeNewPosition();
+          $('.invader').animate({ top: newq[0], left: newq[1] });
+      }*/
+});
