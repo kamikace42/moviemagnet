@@ -289,7 +289,7 @@ jQuery(document).ready(function() {
 
             }
             $.ajax({
-                    //url: "?url=https://thepiratebay.org/search/" + imdb,
+                    //url: "url=https://thepiratebay.org/search/" + imdb,
                     url: "https://thepiratebay.org/search/" + encodeURI(title) + ' ' + year + "/0/99/200",
                     type: 'GET',
                     dataType: 'html',
@@ -473,7 +473,7 @@ jQuery(document).ready(function() {
         }
 
         //busqueda yandex 
-        jQuery(document).ready(function($) {
+        
             $.ajax({
                     url: 'https://yandex.com/search/xml?user=kamikace&key=03.409040134:43ae31eeeefc88dbf9bde86ebe6ec5ec&sortby=rlv&l10n=en&query=site%3Aimdb.com+' + encodeURI(busqueda) + '+' + year,
                     type: 'GET',
@@ -644,7 +644,7 @@ jQuery(document).ready(function() {
 
 
                 });
-        });
+        
     }
     //chorrada invaders
     /*  var contador = 0;
