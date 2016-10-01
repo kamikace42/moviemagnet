@@ -130,7 +130,7 @@ jQuery(document).ready(function() {
             },
             source: function(request, response) {
                 $.ajax({
-                    url: "ajaxproxy.php?http://www.imdb.com/xml/find?json=1&nr=1&tt=on",
+                    url: "http://www.imdb.com/xml/find?json=1&nr=1&tt=on",
                     type: 'GET',
                     dataType: "json",
                     data: {
@@ -230,7 +230,7 @@ jQuery(document).ready(function() {
             }
             //token
             jQuery.ajax({
-                    url: 'ajaxproxy.php?http://torrentapi.org/pubapi_v2.php?get_token=get_token',
+                    url: 'http://torrentapi.org/pubapi_v2.php?get_token=get_token',
                     type: 'GET',
                     dataType: 'json',
                 })
@@ -239,7 +239,7 @@ jQuery(document).ready(function() {
                     var token = json.token;
                     jQuery.ajax({
                             //url: 'http://torrentapi.org/pubapi_v2.php?mode=search&format=json_extended&sort=seeders&ranked=0&search_imdb=' + imdb + '&token=' + token,
-                            url: 'ajaxproxy.php?http://torrentapi.org/pubapi_v2.php?mode=search&format=json_extended&sort=seeders&ranked=0&search_string=' + encodeURI(title) + '%20' + year + '&token=' + token + '&b=4&f=norefer',
+                            url: 'http://torrentapi.org/pubapi_v2.php?mode=search&format=json_extended&sort=seeders&ranked=0&search_string=' + encodeURI(title) + '%20' + year + '&token=' + token + '&b=4&f=norefer',
                             type: 'GET',
                             dataType: 'json',
                         })
@@ -289,8 +289,8 @@ jQuery(document).ready(function() {
 
             }
             $.ajax({
-                    //url: "ajaxproxy.php?url=https://thepiratebay.org/search/" + imdb,
-                    url: "ajaxproxy.php?https://thepiratebay.org/search/" + encodeURI(title) + ' ' + year + "/0/99/200",
+                    //url: "?url=https://thepiratebay.org/search/" + imdb,
+                    url: "https://thepiratebay.org/search/" + encodeURI(title) + ' ' + year + "/0/99/200",
                     type: 'GET',
                     dataType: 'html',
 
@@ -363,7 +363,7 @@ jQuery(document).ready(function() {
                     console.log("complete");
                 });*/
             $.ajax({
-                    url: 'ajaxproxy.php?https://torrentproject.se/?s=' + encodeURI(title) + '+' + year + '&filter=2000&hl=en&safe=on&num=20&start=0&orderby=best',
+                    url: 'https://torrentproject.se/?s=' + encodeURI(title) + '+' + year + '&filter=2000&hl=en&safe=on&num=20&start=0&orderby=best',
                     type: 'GET',
                     dataType: 'html',
                 })
@@ -405,7 +405,7 @@ jQuery(document).ready(function() {
                 year = "";
             }
          $.ajax({
-            url: 'ajaxproxy.php?https://torrentz2.eu/search?f='+title+' '+year+'+video',
+            url: 'https://torrentz2.eu/search?f='+title+' '+year+'+video',
             type: 'GET',
             dataType: 'html',
         })
@@ -475,7 +475,7 @@ jQuery(document).ready(function() {
         //busqueda yandex 
         jQuery(document).ready(function($) {
             $.ajax({
-                    url: 'ajaxproxy.php?https://yandex.com/search/xml?user=kamikace&key=03.409040134:43ae31eeeefc88dbf9bde86ebe6ec5ec&sortby=rlv&l10n=en&query=site%3Aimdb.com+' + encodeURI(busqueda) + '+' + year,
+                    url: 'https://yandex.com/search/xml?user=kamikace&key=03.409040134:43ae31eeeefc88dbf9bde86ebe6ec5ec&sortby=rlv&l10n=en&query=site%3Aimdb.com+' + encodeURI(busqueda) + '+' + year,
                     type: 'GET',
                     dataType: 'xml',
                 })
@@ -518,7 +518,7 @@ jQuery(document).ready(function() {
                         $('#titulo').append(name[0]);
                         $('#descripcion').append(desc[0]);
                         $.ajax({ //foto del actor
-                                url: 'ajaxproxy.php?http://www.imdb.com/name/' + imdb + '/',
+                                url: 'http://www.imdb.com/name/' + imdb + '/',
                                 type: 'GET',
                                 dataType: 'html',
                             })
