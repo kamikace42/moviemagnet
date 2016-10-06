@@ -91,7 +91,7 @@ jQuery(document).ready(function() {
     function getRandomMovie() {
         $.ajax({
                 //url: 'http://www.imdb.com/random/title',
-                url: 'http://www.suggestmemovie.com',
+                url: 'ajaxproxy.php?http://www.suggestmemovie.com',
                 type: 'GET',
                 dataType: 'html',
             })
@@ -169,7 +169,7 @@ jQuery(document).ready(function() {
             },
             source: function(request, response) {
                 $.ajax({
-                    url: "http://www.imdb.com/xml/find?json=1&nr=1&tt=on",
+                    url: "ajaxproxy.php?http://www.imdb.com/xml/find?json=1&nr=1&tt=on",
                     type: 'GET',
                     dataType: "json",
                     data: {
@@ -269,7 +269,7 @@ jQuery(document).ready(function() {
             }
             //token
             jQuery.ajax({
-                    url: 'http://torrentapi.org/pubapi_v2.php?get_token=get_token',
+                    url: 'ajaxproxy.php?http://torrentapi.org/pubapi_v2.php?get_token=get_token',
                     type: 'GET',
                     dataType: 'json',
                 })
@@ -278,14 +278,15 @@ jQuery(document).ready(function() {
                     var token = json.token;
                     jQuery.ajax({
                             //url: 'http://torrentapi.org/pubapi_v2.php?mode=search&format=json_extended&sort=seeders&ranked=0&search_imdb=' + imdb + '&token=' + token,
-                            url: 'http://torrentapi.org/pubapi_v2.php?mode=search&format=json_extended&sort=seeders&ranked=0&search_string=' + encodeURI(title) + '%20' + year + '&token=' + token + '&b=4&f=norefer',
+                            url: 'ajaxproxy.php?http://torrentapi.org/pubapi_v2.php?mode=search&format=json_extended&sort=seeders&ranked=0&search_string=' + encodeURI(title) + '%20' + year + '&token=' + token + '&b=4&f=norefer',
                             type: 'GET',
                             dataType: 'json',
                         })
                         .done(function(json) {
                             console.log("success");
                             if (json.error === 'No results found' || json.error_code === 10) {
-                                $('#enlaces').append('<p>No results found in RARBG</p>');
+                                // $('#enlaces').append('<p>No results found in RARBG</p>');
+                                console.log("No results found in RARBG");
                                 //exit();
                                 return;
                             } else if (json.error === 'Invalid token set!' || json.error === 'Invalid token. Use get_token for a new one!') {
@@ -330,8 +331,8 @@ jQuery(document).ready(function() {
             }
             
             $.ajax({
-                    //url: "url=https://thepiratebay.org/search/" + imdb,
-                    url: "https://thepiratebay.org/search/" + encodeURI(title) + ' ' + year + "/0/99/200",
+                    //url: "ajaxproxy.php?url=https://thepiratebay.org/search/" + imdb,
+                    url: "ajaxproxy.php?https://thepiratebay.org/search/" + encodeURI(title) + ' ' + year + "/0/99/200",
                     type: 'GET',
                     dataType: 'html',
                     timeout:5000,
@@ -342,7 +343,9 @@ jQuery(document).ready(function() {
                     console.log("success");
 
                     if (!$(data).find('.detName')) {
-                        $('#enlaces').append('<p>No results found in thepiratebay</p>');
+                        // $('#enlaces').append('<p>No results found in thepiratebay</p>');
+                        console.log('No results found in thepiratebay');
+
                         return;
                     }
                     /*else if (data.slice(0, 8) === 'Database') {
@@ -370,7 +373,8 @@ jQuery(document).ready(function() {
                 .fail(function(textContent) {
                     console.log("error");
                     console.log(textContent);
-                    $('#enlaces').append('<p>thepiratebay </p>' + textContent.statusText);
+                    // $('#enlaces').append('<p>thepiratebay ' + textContent.statusText+'</p>');
+                    console.log("piratebay " + textContent.statusTex);
                 })
                 .always(function(xhr, status) {
                     console.log("complete");
@@ -386,7 +390,7 @@ jQuery(document).ready(function() {
                 year = "";
             }
             $.ajax({
-                    url: 'https://torrentproject.se/?s=' + encodeURI(title) + '+' + year + '&filter=2000&hl=en&safe=on&num=20&start=0&orderby=best',
+                    url: 'ajaxproxy.php?https://torrentproject.se/?s=' + encodeURI(title) + '+' + year + '&filter=2000&hl=en&safe=on&num=20&start=0&orderby=best',
                     type: 'GET',
                     dataType: 'html',
                 })
@@ -428,7 +432,7 @@ jQuery(document).ready(function() {
                 year = "";
             }
             $.ajax({
-                    url: 'https://torrentz2.eu/search?f=' + title + ' ' + year + '+video',
+                    url: 'ajaxproxy.php?https://torrentz2.eu/search?f=' + title + ' ' + year + '+video',
                     type: 'GET',
                     dataType: 'html',
                 })
@@ -524,7 +528,7 @@ jQuery(document).ready(function() {
         //busqueda yandex 
         jQuery(document).ready(function($) {
             $.ajax({
-                    url: 'https://yandex.com/search/xml?user=kamikace&key=03.409040134:43ae31eeeefc88dbf9bde86ebe6ec5ec&sortby=rlv&l10n=en&query=site%3Aimdb.com+' + encodeURI(busqueda) + '+' + year,
+                    url: 'ajaxproxy.php?https://yandex.com/search/xml?user=kamikace&key=03.409040134:43ae31eeeefc88dbf9bde86ebe6ec5ec&sortby=rlv&l10n=en&query=site%3Aimdb.com+' + encodeURI(busqueda) + '+' + year,
                     type: 'GET',
                     dataType: 'xml',
                 })
@@ -567,7 +571,7 @@ jQuery(document).ready(function() {
                         $('#titulo').append(name[0]);
                         $('#descripcion').append(desc[0]);
                         $.ajax({ //foto del actor
-                                url: 'http://www.imdb.com/name/' + imdb + '/',
+                                url: 'ajaxproxy.php?http://www.imdb.com/name/' + imdb + '/',
                                 type: 'GET',
                                 dataType: 'html',
                             })
@@ -602,7 +606,7 @@ jQuery(document).ready(function() {
 
                             if (json.Response === 'False' || json.Type === 'game') {
                                 if (document.getElementById('expert').checked) {
-                                    $('#enlaces').append('<table class="tablesorter"><thead><tr><th>Links</th><th>Size</th><th title="Seeders">S</th><th title="Leechers">L</th></tr></thead><tbody></tbody></table>');
+                                    $('#enlaces').append('<table class="tablesorter"><thead><tr><th>Links</th><th>Size</th><th title="Seeders">Seed</th><th title="Leechers">Leech</th></tr></thead><tbody></tbody></table>');
                                     searchRarbg();
                                     searchTpb();
                                     searchTP();
@@ -706,7 +710,7 @@ jQuery(document).ready(function() {
                                 });
                             //magnet
                             //eleccion de servidor
-                            $('#enlaces').append('<table class="tablesorter"><thead><tr><th>Links</th><th>Size</th><th title="Seeders">S</th><th title="Leechers">L</th></tr></thead><tbody></tbody></table>');
+                            $('#enlaces').append('<table class="tablesorter"><thead><tr><th>Links</th><th>Size</th><th title="Seeders">Seed</th><th title="Leechers">Leech</th></tr></thead><tbody></tbody></table>');
                             searchRarbg();
                             searchTpb();
                             searchTP();

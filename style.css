@@ -165,7 +165,8 @@ margin: 0;
     /* box-shadow: 0 0 20px 1px gray; */
     margin-bottom: 30px;
     border-radius: 2px;
-    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
+        /* box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12); */
+    box-shadow: 0 0 10px 1px gray;
 }
 
 #iconRandom {
@@ -194,6 +195,8 @@ margin: 0;
 #infoCentro {
     text-align: right;
     color: #9E9E9E;
+
+        font-weight: 700;
 }
 
 
@@ -506,6 +509,8 @@ table.tablesorter thead tr .header {
     background-repeat: no-repeat;
     background-position: center right;
     cursor: pointer;
+
+        border: 1px #a0a0a0 solid;
 }
 
 table.tablesorter tbody td {
@@ -543,7 +548,7 @@ thead {
 .seeders,
 .leechers {
     color: green;
-    width: 50px;
+    width: 55px;
 }
 
 .size {
@@ -552,7 +557,8 @@ thead {
 }
 
 tbody tr:hover {
-    background-color: rgba(158, 158, 158, 0.1);
+    /*background-color: rgba(158, 158, 158, 0.1);*/
+        background-color: rgba(158, 158, 158, 0.29);
 }
 
 .invader {
