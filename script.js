@@ -1,7 +1,5 @@
 //TO DO
-//          subtitulos?
 //          descripcion del torrent, info de la pagina
-//          actualizar semillas tiempo real - bitsnoop/boton
 //          scroll top
 //          check duplicates magnet http://jsfiddle.net/wke3Laej/
 //          https://torrentproject.se/api
@@ -10,15 +8,12 @@
 //          http://www.magnetdl.com/t/the-hobbit-2012/se/desc/
 //          http://www.idope.se/torrent/Now You See Me 2 2016/
 //          https://kickass.unblocked.live/search.php?q=the+matrix+1999
-//          https://torrentz2.eu/search?f=movies%20the%20matrix%201999
 //          http://www.torrenthound.com/search/1/The+matrix+1999/seeds:desc
-//          capa opaca mientras carga
 //          load more links
 //          no links found- quitar tabla, ej The Scene
 //          random movie http://codepen.io/yigitbiber/pen/JFpvc
-//                       http://www.imdb.com/random/title   https://moviemagnet.net/random
+//                      
 //          popular movies https://torrentfreak.com/category/dvdrip/feed/
-//          contador de tiempo - something went wrong si pantalla vacia
 //          mejorar sistema actores/directores wiki? http://www.imdb.com/name/nm0000040/
 
 
@@ -29,15 +24,17 @@ jQuery(document).ready(function() {
     var year;
     var busqueda;
     var type;
+    var randomTitle = "";
     searchEnter();
     autocompletar();
+    getRandomMovie();
 
-    
+
 
     //return
     function volver() {
         // $('section').hide("fold", { size: 65 }, 600, function() {
-        $('.container').hide("fade", function() {
+        $('.contenedor').hide("fade", function() {
             $('.landing').show();
             $("#buscar").focus();
             $("#buscar").val("");
@@ -48,9 +45,8 @@ jQuery(document).ready(function() {
 
     }
     //click en la X
-    $("#return").on('click', function() {
+    $("#iconReturn").on('click', function() {
         volver();
-        console.log("asd");
     });
     //pulsar escape o retroceso
     $(document.body).on('keyup', function(event) {
@@ -76,9 +72,52 @@ jQuery(document).ready(function() {
             }
         });
     }
+    //boton buscar
+    $("#btnBuscar").on('click', function() {
+        if ($('input').val() !== "") {
+            consulta();
+        }
+
+    });
+    //boton random
+    $("#btnRandom").on('click', function() {
+        consulta('btnRandom');
+    });
+    $("#iconRandom").on('click', function() {
+        consulta('iconRandom');
+    });
 
 
-    //vaciar
+    function getRandomMovie() {
+        $.ajax({
+                //url: 'http://www.imdb.com/random/title',
+                url: 'ajaxproxy.php?http://www.suggestmemovie.com',
+                type: 'GET',
+                dataType: 'html',
+            })
+            .done(function(data) {
+                var imagen = $(data).find('a img');
+                //console.log($(asd[9]).attr('href'));
+                console.log("random- " + imagen[3].title);
+                randomTitle = imagen[3].title.replace(/[()]/g, '');//quitar parentesis año
+
+            })
+            .fail(function() {
+                console.log("error");
+            })
+            .always(function() {
+                console.log("complete");
+            });
+    }
+
+    //mostrar servidores
+    $(".logo img").on('click', function(event) {
+        event.preventDefault();
+        $(".servers,.mode").toggle();
+    });
+
+
+    //vaciar input
     /*$("#buscar").on('keyup change copy paste cut', function(e) {
         if (this.value.length === 0) {
             $('section').fadeOut('slow/400/fast', function() {
@@ -100,7 +139,7 @@ jQuery(document).ready(function() {
     //reinicio tras busqueda
     function exit() {
         $('#ui-id-1').hide();
-        $('.container').fadeIn('slow');
+        $('.contenedor').fadeIn('slow');
 
         $('.loader').hide();
         sortTable();
@@ -130,7 +169,7 @@ jQuery(document).ready(function() {
             },
             source: function(request, response) {
                 $.ajax({
-                    url: "http://www.imdb.com/xml/find?json=1&nr=1&tt=on",
+                    url: "ajaxproxy.php?http://www.imdb.com/xml/find?json=1&nr=1&tt=on",
                     type: 'GET',
                     dataType: "json",
                     data: {
@@ -193,15 +232,15 @@ jQuery(document).ready(function() {
             console.log(json);
             console.log(json.items[0].id.videoId);
             video = json.items[0].id.videoId;
-            $("#trailer").append('<a class="trailer fancybox.iframe" href="https://www.youtube.com/embed/' + video + '?autoplay=1" original-title="Watch trailer"><img src="images/trailer.png"></a>');
+            $("#descripcion").append('<a class="trailer fancybox.iframe" href="https://www.youtube.com/embed/' + video + '?autoplay=1&iv_load_policy=3" original-title="Watch trailer"><i class="fa fa-youtube-play fa-2x fa-fw" aria-hidden="true"></i><span>Trailer</span></a>');
         });
 
     }
     //nota imdb guay
-    function imdbNota(){
-        $("#nota").append('<span class="imdbRatingPlugin" data-user="ur68741226" data-title="'+imdb+' data-style="p1"><a href="http://www.imdb.com/title/'+imdb+'"><img src="http://g-ecx.images-amazon.com/images/G/01/imdb/plugins/rating/images/imdb_46x22.png" alt="'+ title+" "+year+' on IMDb" /></a></span>');
+    function imdbNota() {
+        $("#nota").append('<span class="imdbRatingPlugin" data-user="ur68741226" data-title="' + imdb + ' data-style="p1"><a href="http://www.imdb.com/title/' + imdb + '"><img src="http://g-ecx.images-amazon.com/images/G/01/imdb/plugins/rating/images/imdb_46x22.png" alt="' + title + " " + year + ' on IMDb" /></a></span>');
         $.getScript('http://g-ec2.images-amazon.com/images/G/01/imdb/plugins/rating/js/rating.min.js');
-        $.getScript('http://p.media-imdb.com/static-content/documents/v1/title/'+imdb+'/ratings%3Fjsonp=imdb.rating.run:imdb.api.title.ratings/data.json?u=ur64023610&s=p2');
+        $.getScript('http://p.media-imdb.com/static-content/documents/v1/title/' + imdb + '/ratings%3Fjsonp=imdb.rating.run:imdb.api.title.ratings/data.json?u=ur64023610&s=p2');
     }
 
 
@@ -230,7 +269,7 @@ jQuery(document).ready(function() {
             }
             //token
             jQuery.ajax({
-                    url: 'http://torrentapi.org/pubapi_v2.php?get_token=get_token',
+                    url: 'ajaxproxy.php?http://torrentapi.org/pubapi_v2.php?get_token=get_token',
                     type: 'GET',
                     dataType: 'json',
                 })
@@ -239,7 +278,7 @@ jQuery(document).ready(function() {
                     var token = json.token;
                     jQuery.ajax({
                             //url: 'http://torrentapi.org/pubapi_v2.php?mode=search&format=json_extended&sort=seeders&ranked=0&search_imdb=' + imdb + '&token=' + token,
-                            url: 'http://torrentapi.org/pubapi_v2.php?mode=search&format=json_extended&sort=seeders&ranked=0&search_string=' + encodeURI(title) + '%20' + year + '&token=' + token + '&b=4&f=norefer',
+                            url: 'ajaxproxy.php?http://torrentapi.org/pubapi_v2.php?mode=search&format=json_extended&sort=seeders&ranked=0&search_string=' + encodeURI(title) + '%20' + year + '&token=' + token + '&b=4&f=norefer',
                             type: 'GET',
                             dataType: 'json',
                         })
@@ -257,14 +296,15 @@ jQuery(document).ready(function() {
                             } else {
                                 for (var i in json.torrent_results) {
                                     var size = parseFloat(json.torrent_results[i].size / 1000000000).toFixed(2);
-                                    $('tbody').append('<tr><td><a href=' + json.torrent_results[i].download + '>' + json.torrent_results[i].title + '</a></td><td class="size">' + ' ' + size + '  GiB ' + '</td><td class="seeders">' + ' ' + json.torrent_results[i].seeders + '</td><td class="leechers">' + ' ' + json.torrent_results[i].leechers + '</td></tr>');
+                                    $('tbody').append('<tr><td class="link"><a href=' + json.torrent_results[i].download + '>' + json.torrent_results[i].title + '</a></td><td class="size">' + ' ' + size + '  GiB ' + '</td><td class="seeders">' + ' ' + json.torrent_results[i].seeders + '</td><td class="leechers">' + ' ' + json.torrent_results[i].leechers + '</td></tr>');
                                 }
                                 $("table").trigger("update");
                                 sortTable();
                             }
                         })
-                        .fail(function() {
+                        .fail(function(textContent) {
                             console.log("error");
+                            console.log("rarbg " + textContent.statusText);
                         })
                         .always(function() {
 
@@ -288,23 +328,27 @@ jQuery(document).ready(function() {
                 year = "";
 
             }
+            
             $.ajax({
-                    //url: "url=https://thepiratebay.org/search/" + imdb,
-                    url: "https://thepiratebay.org/search/" + encodeURI(title) + ' ' + year + "/0/99/200",
+                    //url: "ajaxproxy.php?url=https://thepiratebay.org/search/" + imdb,
+                    url: "ajaxproxy.php?https://thepiratebay.org/search/" + encodeURI(title) + ' ' + year + "/0/99/200",
                     type: 'GET',
                     dataType: 'html',
+                    timeout:5000,
 
                 })
+
                 .done(function(data) {
                     console.log("success");
 
                     if (!$(data).find('.detName')) {
                         $('#enlaces').append('<p>No results found in thepiratebay</p>');
                         return;
-                    } else if (data === 'Database maintenance, please check back in 10 minutes.') {
+                    }
+                    /*else if (data.slice(0, 8) === 'Database') {
                         $('#enlaces').append('<p>thepiratebay database maintenance</p>');
                         return;
-                    }
+                    }*/
                     var magnet = $(data).find('.detName').next();
                     var detname = $(data).find('.detName');
                     var detLink = $(data).find('.detLink');
@@ -317,7 +361,7 @@ jQuery(document).ready(function() {
                         var size = detDesc[index].textContent.split(/[\s,]+/);
                         var seeds = tds[index].textContent;
                         var leechs = tdl[index].textContent;
-                        $('tbody').append('<tr><td><a href=' + magnet[index] + '>' + title + '</a>' + '</a></td><td class="size">' + ' ' + size[4] + ' ' + size[5] + ' ' + '</span></td><td class="seeders">' + seeds + '</td><td class="leechers">' + leechs + '</td></tr>');
+                        $('tbody').append('<tr><td class="link"><a href=' + magnet[index] + '>' + title + '</a>' + '</a></td><td class="size">' + ' ' + size[4] + ' ' + size[5] + ' ' + '</span></td><td class="seeders">' + seeds + '</td><td class="leechers">' + leechs + '</td></tr>');
 
                     });
                     $("table").trigger("update");
@@ -325,9 +369,12 @@ jQuery(document).ready(function() {
                 })
                 .fail(function(textContent) {
                     console.log("error");
+                    console.log(textContent);
+                    $('#enlaces').append('<p>thepiratebay </p>' + textContent.statusText);
                 })
                 .always(function(xhr, status) {
                     console.log("complete");
+                    console.log(status);
                 });
         }
     }
@@ -338,32 +385,8 @@ jQuery(document).ready(function() {
                 title = busqueda;
                 year = "";
             }
-            /*$.ajax({
-                    //url: 'index.php?q=https://torrentproject.se/?s=' + title + '+' + year + '&out=json&filter=2000',
-                    url: 'asd/browse.php?u=https%3A%2F%2Ftorrentproject.se%2F%3Fs%3D' + title + '%2B' + year + '%26filter%3D2000%26orderby%3Dseeders%26out%3Djson',
-                    type: 'GET',
-                    dataType: 'json',
-                })
-                .done(function(json) {
-                    console.log("success");
-
-                    for (var i in json) {
-                        if (typeof json[i].torrent_hash != 'undefined') {
-                            var size = parseFloat(json[i].torrent_size / 1000000000).toFixed(2);
-                            $('tbody').append('<tr><td><a href=magnet:?xt=urn:' + json[i].torrent_hash + '&tr=udp://tracker.opentrackr.org:1337&tr=udp://tracker.coppersurfer.tk:6969&tr=udp://9.rarbg.to:2710' + '>' + json[i].title + '</a></td><td class="size">' + ' ' + size + '  GiB ' + '</td><td class="seeders">' + ' ' + json[i].seeds + '</td><td class="leechers">' + ' ' + json[i].leechs + '</td></tr>');
-                        }
-                    }
-                    $("table").trigger("update");
-                })
-                .fail(function(textStatus) {
-                    console.log("error");
-                    console.log(textStatus);
-                })
-                .always(function() {
-                    console.log("complete");
-                });*/
             $.ajax({
-                    url: 'https://torrentproject.se/?s=' + encodeURI(title) + '+' + year + '&filter=2000&hl=en&safe=on&num=20&start=0&orderby=best',
+                    url: 'ajaxproxy.php?https://torrentproject.se/?s=' + encodeURI(title) + '+' + year + '&filter=2000&hl=en&safe=on&num=20&start=0&orderby=best',
                     type: 'GET',
                     dataType: 'html',
                 })
@@ -383,7 +406,7 @@ jQuery(document).ready(function() {
                     var link;
                     $(data).find('h3 a').each(function(index, el) {
                         link = $(el).attr('href').split('/');
-                        $('tbody').append('<tr><td><a href="magnet:?xt=urn:btih:' + link[1] + '&tr=udp://tracker.opentrackr.org:1337&tr=udp://tracker.coppersurfer.tk:6969&tr=udp://9.rarbg.to:2710&tr=udp://tracker.leechers-paradise.org:6969/announce/">' + title[index].text + '</a></td><td class="size">' + ' ' + size[index].textContent + '</td><td class="seeders">' + ' ' + seed[index].textContent + '</td><td class="leechers">' + ' ' + leech[index].textContent + '</td></tr>');
+                        $('tbody').append('<tr><td class="link"><a href="magnet:?xt=urn:btih:' + link[1] + '&tr=udp://tracker.opentrackr.org:1337&tr=udp://tracker.coppersurfer.tk:6969&tr=udp://9.rarbg.to:2710&tr=udp://tracker.leechers-paradise.org:6969/announce/">' + title[index].text + '</a></td><td class="size">' + ' ' + size[index].textContent + '</td><td class="seeders">' + ' ' + seed[index].textContent + '</td><td class="leechers">' + ' ' + leech[index].textContent + '</td></tr>');
                     });
                     $("table").trigger("update");
                     sortTable();
@@ -398,66 +421,92 @@ jQuery(document).ready(function() {
     }
 
 
-    function searchTZ2 (){
-         if (document.getElementById('TZ2').checked) {
+    function searchTZ2() {
+        if (document.getElementById('TZ2').checked) {
             if ((document.getElementById('expert').checked)) {
                 title = busqueda;
                 year = "";
             }
-         $.ajax({
-            url: 'https://torrentz2.eu/search?f='+title+' '+year+'+video',
-            type: 'GET',
-            dataType: 'html',
-        })
-        .done(function(data) {
-            console.log("success");
-            var dl = $(data).find('dl');
-            var dt = $(data).find('dt a');
-            var magnet=dt.attr('href');
-            var dd = $(data).find('dd');
-            var size =$(data).find('dd span:nth-child(3)'); //size
-            var seed =$(data).find('dd span:nth-child(4)'); //seed
-            var leech =$(data).find('dd span:nth-child(5)'); //leech
-            $(data).find('dt a').each(function(index, val) {
-                /*console.log(dt[index].textContent); //title
-                console.log(dt.attr('href').replace(/\//g, "")); //enlace
-                console.log(size[index].textContent);
-                console.log(seed[index].textContent);
-                console.log(leech[index].textContent);*/
-                $('tbody').append('<tr><td><a href="magnet:?xt=urn:btih:' + $(val).attr('href').replace(/\//g, "") + '&tr=udp://tracker.opentrackr.org:1337&tr=udp://tracker.coppersurfer.tk:6969&tr=udp://9.rarbg.to:2710&tr=udp://tracker.leechers-paradise.org:6969/announce/">' + dt[index].textContent + '</a></td><td class="size">' + ' ' + size[index].textContent + '</td><td class="seeders">' + ' ' + seed[index].textContent + '</td><td class="leechers">' + ' ' + leech[index].textContent + '</td></tr>');
+            $.ajax({
+                    url: 'ajaxproxy.php?https://torrentz2.eu/search?f=' + title + ' ' + year + '+video',
+                    type: 'GET',
+                    dataType: 'html',
+                })
+                .done(function(data) {
+                    console.log("success");
+                    var dl = $(data).find('dl');
+                    var dt = $(data).find('dt a');
+                    var magnet = dt.attr('href');
+                    var dd = $(data).find('dd');
+                    var size = $(data).find('dd span:nth-child(3)'); //size
+                    var seed = $(data).find('dd span:nth-child(4)'); //seed
+                    var leech = $(data).find('dd span:nth-child(5)'); //leech
+                    
+                    
+                    $(data).find('dt a').each(function(index, val) {
+                        //quitar coma miles
+                        var seed2=seed[index].textContent.replace(/\,/g,'');
+                         var leech2=leech[index].textContent.replace(/\,/g,'');
+                        /*console.log(dt[index].textContent); //title
+                        console.log(dt.attr('href').replace(/\//g, "")); //enlace
+                        console.log(size[index].textContent);
+                        console.log(seed[index].textContent);
+                        console.log(leech[index].textContent);*/
+                        $('tbody').append('<tr><td class="link"><a href="magnet:?xt=urn:btih:' + $(val).attr('href').replace(/\//g, "") + '&tr=udp://tracker.opentrackr.org:1337&tr=udp://tracker.coppersurfer.tk:6969&tr=udp://9.rarbg.to:2710&tr=udp://tracker.leechers-paradise.org:6969/announce/">' + dt[index].textContent + '</a></td><td class="size">' + ' ' + size[index].textContent + '</td><td class="seeders">' + ' ' + seed2 + '</td><td class="leechers">' + ' ' + leech2 + '</td></tr>');
 
-                
-            });
 
-        })
-        .fail(function() {
-            console.log("error");
-        })
-        .always(function() {
-            console.log("complete");
-        });
+                    });
+
+                })
+                .fail(function() {
+                    console.log("error");
+                })
+                .always(function() {
+                    console.log("complete");
+                });
+        }
     }
-}
+    //streaming instant
+    function instant(magnet) {
 
-    function consulta() {
+        popupCenter('https://instant.io/#' + magnet, "test", 800, 600);
+    }
+
+    function popupCenter(url, title, w, h) {
+        var left = (screen.width / 2) - (w / 2);
+        var top = (screen.height / 2) - (h / 2);
+        return window.open(url, title, 'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, width=' + w + ', height=' + h + ', top=' + top + ', left=' + left);
+    }
+
+
+
+
+    function consulta(origen) {
         console.log('consulta');
-        setTimeout(function() { //temporizador
-            if ($('.landing').css('display') === 'block') {
-                return;
-            } else {
-                exit();
-            }
 
-
-        }, 5000);
+        if (origen === "iconRandom") {
+            $('.contenedor').hide();
+        }
         $('.landing').hide();
         $('.info').empty();
         $('.loader').show();
         $('#ui-id-1').hide();
         $('.ui-autocomplete-loading').removeClass('ui-autocomplete-loading');
 
+        if (origen === "btnRandom" || origen === "iconRandom") {
+            if (randomTitle !== "") {
+                busqueda = randomTitle;
+                randomTitle = "";
+                getRandomMovie();
+            } else if (randomTitle === "") {
+                getRandomMovie();
+                consulta();
+                return;
+            }
+        } else {
+            busqueda = $('#buscar').val();
+        }
 
-        busqueda = $('#buscar').val();
         //punto coma año
         //var a = 'ABCs.Of.Death.2.5.2016'; //separar por punto y espacio
         //var b = a.split(/\s|\./);
@@ -473,9 +522,9 @@ jQuery(document).ready(function() {
         }
 
         //busqueda yandex 
-        
+        jQuery(document).ready(function($) {
             $.ajax({
-                    url: 'https://yandex.com/search/xml?user=kamikace&key=03.409040134:43ae31eeeefc88dbf9bde86ebe6ec5ec&sortby=rlv&l10n=en&query=site%3Aimdb.com+' + encodeURI(busqueda) + '+' + year,
+                    url: 'ajaxproxy.php?https://yandex.com/search/xml?user=kamikace&key=03.409040134:43ae31eeeefc88dbf9bde86ebe6ec5ec&sortby=rlv&l10n=en&query=site%3Aimdb.com+' + encodeURI(busqueda) + '+' + year,
                     type: 'GET',
                     dataType: 'xml',
                 })
@@ -518,7 +567,7 @@ jQuery(document).ready(function() {
                         $('#titulo').append(name[0]);
                         $('#descripcion').append(desc[0]);
                         $.ajax({ //foto del actor
-                                url: 'http://www.imdb.com/name/' + imdb + '/',
+                                url: 'ajaxproxy.php?http://www.imdb.com/name/' + imdb + '/',
                                 type: 'GET',
                                 dataType: 'html',
                             })
@@ -534,16 +583,26 @@ jQuery(document).ready(function() {
                     //busqueda en omdbapi titulo y año
                     jQuery.ajax({
                             //url: 'proxy.php?url=http://www.imdb.com/xml/find?json=1&nr=1&tt=on&q=matrix',
-                            url: 'http://www.omdbapi.com/?i=' + imdb + '&plot=full&r=json',
+                            url: 'https://www.omdbapi.com/?i=' + imdb + '&r=json',
                             type: 'GET',
                             dataType: 'json',
 
                         })
                         .done(function(json) {
                             console.log("success");
+                            setTimeout(function() { //temporizador
+                                if ($('.landing').css('display') === 'block') {
+                                    return;
+                                } else {
+                                    exit();
+                                }
+
+
+                            }, 5000);
+
                             if (json.Response === 'False' || json.Type === 'game') {
                                 if (document.getElementById('expert').checked) {
-                                    $('#enlaces').append('<table class="tablesorter"><thead><tr><th>Links</th><th>Size</th><th>Seeds</th><th>Leechs</th></tr></thead><tbody></tbody></table>');
+                                    $('#enlaces').append('<table class="tablesorter"><thead><tr><th>Links</th><th>Size</th><th title="Seeders">S</th><th title="Leechers">L</th></tr></thead><tbody></tbody></table>');
                                     searchRarbg();
                                     searchTpb();
                                     searchTP();
@@ -569,12 +628,43 @@ jQuery(document).ready(function() {
                             title = json.Title;
                             year = json.Year;
                             type = json.Type;
-                            $('#titulo').append('<h1>' + title + ' ' + '(' + year + ')' + '</h1>');
-                            $('#descripcion').append('<p style="text-align:center;">' + json.Runtime + ' | ' + json.Genre + ' | ' + json.imdbRating + '</p>');
-                            $('#nota').append('<span class="imdbRatingPlugin imdbRatingStyle1" data-user="ur64023610" data-title="tt0591328" data-style="p1"><a href="http://www.imdb.com/title/'+imdb+'/?ref_=plg_rt_1"><img src="http://g-ecx.images-amazon.com/images/G/01/imdb/plugins/rating/images/imdb_46x22.png"></a><span class="rating">'+ json.imdbRating+'<span class="ofTen">/10</span></span><img src="http://g-ecx.images-amazon.com/images/G/01/imdb/plugins/rating/images/imdb_star_22x21.png" class="star"></span>');
-                            $('#descripcion').append('<p>' + json.Plot + '</p>');
+                            var writer = json.Writer;
+                            if (writer.length > 91) {
+                                writer = writer.slice(0, 90) + "...";
+                            }
+                            var actors = json.Actors;
+                            if (actors.length > 91) {
+                                actors = actors.slice(0, 90) + "...";
+                            }
+                            var director = json.Director;
+                            if (director.length > 91) {
+                                director = director.slice(0, 90) + "...";
+                            }
+                            var plot = json.Plot;
+                            if (plot.length > 270) {
+                                plot = plot.slice(0, 270) + "...";
+                            }
+                            var title2 = json.Title;
+                            if (title2.length > 45) {
+                                title2 = title2.slice(0, 45) + "...";
+                            }
+                            $('#titulo').append('<h2 title="' + title + '">' + title2 + ' ' + '(' + year + ')' + '</h2>');
+                            $('#nota').append('<span class="imdbRatingPlugin imdbRatingStyle1" data-user="ur64023610" data-title="tt0591328" data-style="p1"><a target="_blank" href="http://www.imdb.com/title/' + imdb + '/?ref_=plg_rt_1"><img src="http://g-ecx.images-amazon.com/images/G/01/imdb/plugins/rating/images/imdb_46x22.png"></a><span class="rating">' + json.imdbRating + '<span class="ofTen">/10</span></span><img src="http://g-ecx.images-amazon.com/images/G/01/imdb/plugins/rating/images/imdb_star_22x21.png" class="star"></span>');
+
+
+                            $('#descripcion').append('<p>' + json.Runtime + '</p>');
+                            $('#descripcion').append('<p>' + json.Genre + '</p>');
+                            $('#descripcion').append('<p>' + director + '</p>');
+                            $('#descripcion').append('<p>' + writer + '</p>');
+                            $('#descripcion').append('<p>' + actors + '</p>');
+
+                            $('#descripcion').append('<p>' + plot + '</p>');
                             var video = title + " " + year;
+
+                            var id = imdb.replace(/[^0-9\.]+/g, "");
+                            $('#descripcion').append('<a target="_blank" href="http://www.opensubtitles.org/en/search/sublanguageid-eng/imdbid-' + id + '/sort-7/asc-0"><i class="fa fa-file-text-o fa-fw fa-2x" aria-hidden="true"></i><span>Subtitles</span></a>');
                             trailer(video);
+
                             //imdbNota();
                             //poster
                             jQuery.ajax({
@@ -591,14 +681,17 @@ jQuery(document).ready(function() {
                                             // exit();
                                             // return;
                                         }
-                                        $('#poster').append('<img src="http://image.tmdb.org/t/p/w500' + json.movie_results[0].poster_path + '"\>');
+                                        else{
+                                            $('#poster').append('<img alt="poster" src="http://image.tmdb.org/t/p/w500' + json.movie_results[0].poster_path + '"\>');
+
+                                        }
                                     } else if (type === 'series') {
                                         if (json.tv_results[0].poster_path === null) {
                                             $('#poster').append('No poster found');
                                             // exit();
                                             // return;
                                         }
-                                        $('#poster').append('<img src="http://image.tmdb.org/t/p/w500' + json.tv_results[0].poster_path + '"\>');
+                                        $('#poster').append('<img alt="poster" src="http://image.tmdb.org/t/p/w500' + json.tv_results[0].poster_path + '"\>');
                                     } else {
                                         $('#poster').append('No poster found');
 
@@ -613,7 +706,7 @@ jQuery(document).ready(function() {
                                 });
                             //magnet
                             //eleccion de servidor
-                            $('#enlaces').append('<table class="tablesorter"><thead><tr><th>Links</th><th>Size</th><th>Seeds</th><th>Leechs</th></tr></thead><tbody></tbody></table>');
+                            $('#enlaces').append('<table class="tablesorter"><thead><tr><th>Links</th><th>Size</th><th title="Seeders">S</th><th title="Leechers">L</th></tr></thead><tbody></tbody></table>');
                             searchRarbg();
                             searchTpb();
                             searchTP();
@@ -632,7 +725,7 @@ jQuery(document).ready(function() {
                         })
                         .always(function(json) {
                             console.log("complete");
-                            console.log(json);
+
                         });
 
                 })
@@ -644,11 +737,11 @@ jQuery(document).ready(function() {
 
 
                 });
-        
+        });
     }
     //chorrada invaders
     /*  var contador = 0;
-      $('.invToggle').click(function(event) {
+      $('.logo').click(function(event) {
           $('.invader').toggle();
           $('.contador').toggle();
 

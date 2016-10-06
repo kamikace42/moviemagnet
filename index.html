@@ -12,27 +12,32 @@
     <link href="jquery-ui.min.css" type="text/css" rel="stylesheet">
     <link href="jquery-ui.structure.min.css" type="text/css" rel="stylesheet">
     <link rel="stylesheet" href="fancybox/source/jquery.fancybox.css" type="text/css" media="screen" />
+    <link rel="stylesheet" href="font-awesome/css/font-awesome.min.css">
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="bootstrap.min.css">
 </head>
 
 <body>
     <noscript>
         <h1 style="color:red;">Your browser does not support JavaScript!</h1></noscript>
     <div class="landing">
-        <div class="logo invToggle"><img src="images/logo.png"></div>
-        <input type="text" id="buscar" placeholder="Search movie" autofocus>
+        <div class="logo"><img src="images/logo.png"></div>
+        <input type="text" id="buscar" placeholder="Movie title" autofocus>
         <span style="color:lime;display: none;" class="contador"></span>
-        <div class="servers">
+        <button id="btnBuscar">Search movie</button>
+        <button id="btnRandom">Surprise me!</button>
+        <div hidden class="servers">
             <input type="checkbox" id="RARBG" value="RARBG" name="servidor" title="RARBG" checked>
             <label for="RARBG">RARBG</label>
-            <input type="checkbox" id="TPB" value="TPB" name="servidor" title="The Pirate Bay">
+            <input type="checkbox" id="TPB" value="TPB" name="servidor" title="The Pirate Bay" checked>
             <label for="TPB">The Pirate Bay</label>
             <input hidden type="checkbox" id="TP" value="TP" name="servidor" title="TorrentProject">
             <label hidden for="TP">TorrentProject</label>
-            <input  type="checkbox" id="TZ2" value="TZ2" name="servidor" title="Torrentz2">
-            <label  for="TZ2">Torrentz2</label>
+            <input type="checkbox" id="TZ2" value="TZ2" name="servidor" title="Torrentz2" checked>
+            <label for="TZ2">Torrentz2</label>
         </div>
-        <div class="mode">
-            <input type="checkbox" id="expert" value="expert" name="mode" title="No help">
+        <div hidden class="mode">
+            <input type="checkbox" id="expert" value="expert" name="mode" title="No help" checked>
             <label for="expert">Expert</label>
         </div>
     </div>
@@ -42,28 +47,51 @@
             <circle class="path" fill="none" stroke-width="6" stroke-linecap="round" cx="33" cy="33" r="30"></circle>
         </svg>
     </div>
-    <div class="container">
-        <section id="resultados">
-            <a id="return" href="#">
-                <svg fill="#000000" height="64" viewBox="0 0 24 24" width="64" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" />
-                    <path d="M0 0h24v24H0z" fill="none" />
-                </svg>
+    <div class="contenedor">
+        <div id="nav" class="resultados">
+            <a id="iconReturn" href="#">
+                <i title="Return" class="fa fa-chevron-left fa-3x fa-fw" aria-hidden="true"></i>
+            </a>
+            <a id="iconRandom" href="#">
+                <i title="Random movie" class="fa fa-random fa-3x fa-fw" aria-hidden="true"></i>
             </a>
             <div id="titulo" class="info"></div>
-            <div id="poster" class="info"></div>
-            <div id="nota" class="info"></div>
-            <div id="trailer" class="info"></div>
-            <div id="descripcion" class="info"></div>
-            <div id="enlaces" class="info"></div>
-        </section>
+        </div>
+        <div id="informacion" class="resultados">
+            <div class="row">
+                <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
+                    <div id="poster" class="info "></div>
+                </div>
+                <div id="infoCentro" class="col-xs-2 col-sm-1 col-md-1 col-lg-1">
+                    <p>Runtime</p>
+                    <p>Genre</p>
+                    <p>Director</p>
+                    <p>Writer</p>
+                    <p>Cast</p>
+                    <p>Plot</p>
+                </div>
+                <div class="col-xs-12 col-sm-8 col-md-8 col-lg-8">
+                    <div id="nota" class="info">
+                    </div>
+                    <div id="descripcion" class="info">
+                    </div>
+                    <div id="trailer" class="info">
+                    </div>
+                    <div id="sub" class="info">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="enlaces" class="info resultados"></div>
     </div>
-    <script type="text/javascript" src="https://code.jquery.com/jquery.js"></script>
-    <script type="text/javascript" src="https://files-stackablejs.netdna-ssl.com/stacktable.min.js"></script>
+    <script type="text/javascript" src="jquery.js"></script>
+    <script type="text/javascript" src="stacktable.min.js"></script>
     <script type="text/javascript" src="jquery.tablesorter.min.js"></script>
     <script type="text/javascript" src="jquery-ui.min.js"></script>
     <script type="text/javascript" src="he.js"></script>
     <script type="text/javascript" src="fancybox/source/jquery.fancybox.js"></script>
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="bootstrap.min.js"></script>
     <script type="text/javascript" src="script.js"></script>
 </body>
 
