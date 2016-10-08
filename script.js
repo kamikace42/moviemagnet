@@ -99,11 +99,12 @@ jQuery(document).ready(function() {
                 var imagen = $(data).find('a img');
                 //console.log($(asd[9]).attr('href'));
                 console.log("random- " + imagen[3].title);
-                randomTitle = imagen[3].title.replace(/[()]/g, '');//quitar parentesis año
+                randomTitle = imagen[3].title.replace(/[()]/g, ''); //quitar parentesis año
 
             })
-            .fail(function() {
+            .fail(function(asd) {
                 console.log("error");
+                $('.landing').append('<div class="alert alert-danger">  <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a><strong>Error!</strong> Install <a target="_blank"  href="https://chrome.google.com/webstore/detail/allow-control-allow-origi/nlfbmbojpeacfghkpbjhddihlkkiljbi">this</a>, activate  and reload.<br><br><br><img src="images/error.jpg"></div>');
             })
             .always(function() {
                 console.log("complete");
@@ -329,17 +330,17 @@ jQuery(document).ready(function() {
                 year = "";
 
             }
-            
+
             $.ajax({
-                    //url: "url=https://thepiratebay.org/search/" + imdb,
-                    url: "https://thepiratebay.org/search/" + encodeURI(title) + ' ' + year + "/0/99/200",
-                    type: 'GET',
-                    dataType: 'html',
-                    timeout:5000,
+                //url: "url=https://thepiratebay.org/search/" + imdb,
+                url: "https://thepiratebay.org/search/" + encodeURI(title) + ' ' + year + "/0/99/200",
+                type: 'GET',
+                dataType: 'html',
+                
 
-                })
+            })
 
-                .done(function(data) {
+            .done(function(data) {
                     console.log("success");
 
                     if (!$(data).find('.detName')) {
@@ -445,12 +446,12 @@ jQuery(document).ready(function() {
                     var size = $(data).find('dd span:nth-child(3)'); //size
                     var seed = $(data).find('dd span:nth-child(4)'); //seed
                     var leech = $(data).find('dd span:nth-child(5)'); //leech
-                    
-                    
+
+
                     $(data).find('dt a').each(function(index, val) {
                         //quitar coma miles
-                        var seed2=seed[index].textContent.replace(/\,/g,'');
-                         var leech2=leech[index].textContent.replace(/\,/g,'');
+                        var seed2 = seed[index].textContent.replace(/\,/g, '');
+                        var leech2 = leech[index].textContent.replace(/\,/g, '');
                         /*console.log(dt[index].textContent); //title
                         console.log(dt.attr('href').replace(/\//g, "")); //enlace
                         console.log(size[index].textContent);
@@ -514,234 +515,160 @@ jQuery(document).ready(function() {
         //punto coma año
         //var a = 'ABCs.Of.Death.2.5.2016'; //separar por punto y espacio
         //var b = a.split(/\s|\./);
-        if (!(document.getElementById('expert').checked)) {
+
             if (busqueda.replace(/^\D+/g, '').length === 4) {
                 year = busqueda.replace(/^\D+/g, '');
                 busqueda = busqueda.match(/^\D+/g);
             } else {
                 year = "";
             }
-        } else {
-            year = "";
-        }
+        
+        //busqueda en omdbapi titulo y año
+        jQuery.ajax({
+                //url: 'proxy.php?url=http://www.imdb.com/xml/find?json=1&nr=1&tt=on&q=matrix',
+                url: 'https://www.omdbapi.com/?t=' + busqueda + '&y='+year+ '&r=json',
+                type: 'GET',
+                dataType: 'json',
 
-        //busqueda yandex 
-        jQuery(document).ready(function($) {
-            $.ajax({
-                    url: 'https://yandex.com/search/xml?user=kamikace&key=03.409040134:43ae31eeeefc88dbf9bde86ebe6ec5ec&sortby=rlv&l10n=en&query=site%3Aimdb.com+' + encodeURI(busqueda) + '+' + year,
-                    type: 'GET',
-                    dataType: 'xml',
-                })
-                .done(function(data) {
-                    console.log("success");
-                    console.log(data);
-                    var dir = [];
-                    $(data).find('url').each(function(data, index) {
-
-                        dir.push($(this).text());
-                    });
-                    var a = dir[0].split('/');
-
-                    //id imdb  console.log(a[4]); 
-                    if (typeof a[4] === 'undefined') {
-                        var b = dir[0].split('?'); //otro tipo url Title?0234215
-                        imdb = 'tt' + b[1];
+            })
+            .done(function(json) {
+                console.log("success");
+                setTimeout(function() { //temporizador
+                    if ($('.landing').css('display') === 'block') {
+                        return;
                     } else {
-                        imdb = a[4];
-                    }
-                    //Extraer info actor/director
-                    var asd = imdb.replace(/[0-9]/g, '');
-                    var desc = [];
-                    var name = [];
-                    if (asd === 'nm') {
-                        type = 'person';
-                        console.log('bien');
-                        $(data).find('passages').each(function(xml, index) {
-                            console.log(this);
-                            desc.push($(this).text());
-
-                        });
-                        $(data).find('title').each(function(xml, index) {
-                            console.log(this);
-                            name.push($(this).text());
-
-                        });
-                        console.log(desc[0]);
-                        console.log(name[0]);
-                        $('#titulo').append(name[0]);
-                        $('#descripcion').append(desc[0]);
-                        $.ajax({ //foto del actor
-                                url: 'http://www.imdb.com/name/' + imdb + '/',
-                                type: 'GET',
-                                dataType: 'html',
-                            })
-                            .done(function(img) {
-                                console.log("success");
-                                $(img).find('#name-poster').clone().appendTo("#poster");
-                            });
-
+                        exit();
                     }
 
-                    console.log(imdb);
 
-                    //busqueda en omdbapi titulo y año
-                    jQuery.ajax({
-                            //url: 'proxy.php?url=http://www.imdb.com/xml/find?json=1&nr=1&tt=on&q=matrix',
-                            url: 'https://www.omdbapi.com/?i=' + imdb + '&r=json',
-                            type: 'GET',
-                            dataType: 'json',
+                }, 5000);
 
-                        })
-                        .done(function(json) {
-                            console.log("success");
-                            setTimeout(function() { //temporizador
-                                if ($('.landing').css('display') === 'block') {
-                                    return;
-                                } else {
-                                    exit();
-                                }
-
-
-                            }, 5000);
-
-                            if (json.Response === 'False' || json.Type === 'game') {
-                                if (document.getElementById('expert').checked) {
-                                    $('#enlaces').append('<table class="tablesorter"><thead><tr><th>Links</th><th>Size</th><th title="Seeders">Seed</th><th title="Leechers">Leech</th></tr></thead><tbody></tbody></table>');
-                                    searchRarbg();
-                                    searchTpb();
-                                    searchTP();
-                                    searchTZ2();
-                                    //final ajax limpiar y ordenar tabla
-                                    $(document).ajaxStop(function() {
-                                        sortTable();
-                                        $('table').stacktable();
-                                        exit();
-                                        $(this).unbind("ajaxStop");
-
-                                    });
-                                }
-                                if (type != 'person') {
-                                    $('#titulo').append('<p>No results found</p>');
-
-                                }
-                                exit();
-                                return;
-                            }
-
-                            imdb = json.imdbID;
-                            title = json.Title;
-                            year = json.Year;
-                            type = json.Type;
-                            var writer = json.Writer;
-                            if (writer.length > 91) {
-                                writer = writer.slice(0, 90) + "...";
-                            }
-                            var actors = json.Actors;
-                            if (actors.length > 91) {
-                                actors = actors.slice(0, 90) + "...";
-                            }
-                            var director = json.Director;
-                            if (director.length > 91) {
-                                director = director.slice(0, 90) + "...";
-                            }
-                            var plot = json.Plot;
-                            if (plot.length > 270) {
-                                plot = plot.slice(0, 270) + "...";
-                            }
-                            var title2 = json.Title;
-                            if (title2.length > 45) {
-                                title2 = title2.slice(0, 45) + "...";
-                            }
-                            $('#titulo').append('<h2 title="' + title + '">' + title2 + ' ' + '(' + year + ')' + '</h2>');
-                            $('#nota').append('<span class="imdbRatingPlugin imdbRatingStyle1" data-user="ur64023610" data-title="tt0591328" data-style="p1"><a target="_blank" href="http://www.imdb.com/title/' + imdb + '/?ref_=plg_rt_1"><img src="http://g-ecx.images-amazon.com/images/G/01/imdb/plugins/rating/images/imdb_46x22.png"></a><span class="rating">' + json.imdbRating + '<span class="ofTen">/10</span></span><img src="http://g-ecx.images-amazon.com/images/G/01/imdb/plugins/rating/images/imdb_star_22x21.png" class="star"></span>');
-
-
-                            $('#descripcion').append('<p>' + json.Runtime + '</p>');
-                            $('#descripcion').append('<p>' + json.Genre + '</p>');
-                            $('#descripcion').append('<p>' + director + '</p>');
-                            $('#descripcion').append('<p>' + writer + '</p>');
-                            $('#descripcion').append('<p>' + actors + '</p>');
-
-                            $('#descripcion').append('<p>' + plot + '</p>');
-                            var video = title + " " + year;
-
-                            var id = imdb.replace(/[^0-9\.]+/g, "");
-                            $('#descripcion').append('<a target="_blank" href="http://www.opensubtitles.org/en/search/sublanguageid-eng/imdbid-' + id + '/sort-7/asc-0"><i class="fa fa-file-text-o fa-fw fa-2x" aria-hidden="true"></i><span>Subtitles</span></a>');
-                            trailer(video);
-
-                            //imdbNota();
-                            //poster
-                            jQuery.ajax({
-                                    //url: 'https://api.themoviedb.org/3/search/movie?api_key=15d2ea6d0dc1d476efbca3eba2b9bbfb&query=' + titulo,
-                                    url: 'https://api.themoviedb.org/3/find/' + imdb + '?external_source=imdb_id&api_key=15d2ea6d0dc1d476efbca3eba2b9bbfb',
-                                    type: 'GET',
-                                    dataType: 'json',
-                                })
-                                .done(function(json) {
-                                    console.log("success");
-                                    if (type === 'movie') {
-                                        if (json.movie_results[0].poster_path === null) {
-                                            $('#poster').append('No poster found');
-                                            // exit();
-                                            // return;
-                                        }
-                                        else{
-                                            $('#poster').append('<img alt="poster" src="http://image.tmdb.org/t/p/w500' + json.movie_results[0].poster_path + '"\>');
-
-                                        }
-                                    } else if (type === 'series') {
-                                        if (json.tv_results[0].poster_path === null) {
-                                            $('#poster').append('No poster found');
-                                            // exit();
-                                            // return;
-                                        }
-                                        $('#poster').append('<img alt="poster" src="http://image.tmdb.org/t/p/w500' + json.tv_results[0].poster_path + '"\>');
-                                    } else {
-                                        $('#poster').append('No poster found');
-
-                                    }
-
-                                })
-                                .fail(function() {
-                                    console.log("error");
-                                })
-                                .always(function() {
-                                    console.log("complete");
-                                });
-                            //magnet
-                            //eleccion de servidor
-                            $('#enlaces').append('<table class="tablesorter"><thead><tr><th>Links</th><th>Size</th><th title="Seeders">Seed</th><th title="Leechers">Leech</th></tr></thead><tbody></tbody></table>');
-                            searchRarbg();
-                            searchTpb();
-                            searchTP();
-                            searchTZ2();
-                            //final ajax limpiar y ordenar tabla
-                            $(document).ajaxStop(function() {
-                                sortTable();
-                                $('table').stacktable();
-                                exit();
-                                $(this).unbind("ajaxStop");
-                            });
-
-                        })
-                        .fail(function() {
-                            console.log("error");
-                        })
-                        .always(function(json) {
-                            console.log("complete");
+                if (json.Response === 'False' || json.Type === 'game') {
+                    if (document.getElementById('expert').checked) {
+                        $('#enlaces').append('<table class="tablesorter"><thead><tr><th>Links</th><th>Size</th><th title="Seeders">Seed</th><th title="Leechers">Leech</th></tr></thead><tbody></tbody></table>');
+                        searchRarbg();
+                        searchTpb();
+                        searchTP();
+                        searchTZ2();
+                        //final ajax limpiar y ordenar tabla
+                        $(document).ajaxStop(function() {
+                            sortTable();
+                            $('table').stacktable();
+                            exit();
+                            $(this).unbind("ajaxStop");
 
                         });
+                    }
+                    if (type != 'person') {
+                        $('#titulo').append('<p>No results found</p>');
 
-                })
-                .fail(function() {
-                    console.log("error");
-                })
-                .always(function() {
-                    console.log("complete");
+                    }
+                    exit();
+                    return;
+                }
+
+                imdb = json.imdbID;
+                title = json.Title;
+                year = json.Year;
+                type = json.Type;
+                var writer = json.Writer;
+                if (writer.length > 91) {
+                    writer = writer.slice(0, 90) + "...";
+                }
+                var actors = json.Actors;
+                if (actors.length > 91) {
+                    actors = actors.slice(0, 90) + "...";
+                }
+                var director = json.Director;
+                if (director.length > 91) {
+                    director = director.slice(0, 90) + "...";
+                }
+                var plot = json.Plot;
+                if (plot.length > 270) {
+                    plot = plot.slice(0, 270) + "...";
+                }
+                var title2 = json.Title;
+                if (title2.length > 45) {
+                    title2 = title2.slice(0, 45) + "...";
+                }
+                $('#titulo').append('<h2 title="' + title + '">' + title2 + ' ' + '(' + year + ')' + '</h2>');
+                $('#nota').append('<span class="imdbRatingPlugin imdbRatingStyle1" data-user="ur64023610" data-title="tt0591328" data-style="p1"><a target="_blank" href="http://www.imdb.com/title/' + imdb + '/?ref_=plg_rt_1"><img src="http://g-ecx.images-amazon.com/images/G/01/imdb/plugins/rating/images/imdb_46x22.png"></a><span class="rating">' + json.imdbRating + '<span class="ofTen">/10</span></span><img src="http://g-ecx.images-amazon.com/images/G/01/imdb/plugins/rating/images/imdb_star_22x21.png" class="star"></span>');
 
 
+                $('#descripcion').append('<p>' + json.Runtime + '</p>');
+                $('#descripcion').append('<p>' + json.Genre + '</p>');
+                $('#descripcion').append('<p>' + director + '</p>');
+                $('#descripcion').append('<p>' + writer + '</p>');
+                $('#descripcion').append('<p>' + actors + '</p>');
+
+                $('#descripcion').append('<p>' + plot + '</p>');
+                var video = title + " " + year;
+
+                var id = imdb.replace(/[^0-9\.]+/g, "");
+                $('#descripcion').append('<a target="_blank" href="http://www.opensubtitles.org/en/search/sublanguageid-eng/imdbid-' + id + '/sort-7/asc-0"><i class="fa fa-file-text-o fa-fw fa-2x" aria-hidden="true"></i><span>Subtitles</span></a>');
+                trailer(video);
+
+                //imdbNota();
+                //poster
+                jQuery.ajax({
+                        //url: 'https://api.themoviedb.org/3/search/movie?api_key=15d2ea6d0dc1d476efbca3eba2b9bbfb&query=' + titulo,
+                        url: 'https://api.themoviedb.org/3/find/' + imdb + '?external_source=imdb_id&api_key=15d2ea6d0dc1d476efbca3eba2b9bbfb',
+                        type: 'GET',
+                        dataType: 'json',
+                    })
+                    .done(function(json) {
+                        console.log("success");
+                        if (type === 'movie') {
+                            if (json.movie_results[0].poster_path === null) {
+                                $('#poster').append('No poster found');
+                                // exit();
+                                // return;
+                            } else {
+                                $('#poster').append('<img alt="poster" src="http://image.tmdb.org/t/p/w500' + json.movie_results[0].poster_path + '"\>');
+
+                            }
+                        } else if (type === 'series') {
+                            if (json.tv_results[0].poster_path === null) {
+                                $('#poster').append('No poster found');
+                                // exit();
+                                // return;
+                            }
+                            $('#poster').append('<img alt="poster" src="http://image.tmdb.org/t/p/w500' + json.tv_results[0].poster_path + '"\>');
+                        } else {
+                            $('#poster').append('No poster found');
+
+                        }
+
+                    })
+                    .fail(function() {
+                        console.log("error");
+                    })
+                    .always(function() {
+                        console.log("complete");
+                    });
+                //magnet
+                //eleccion de servidor
+                $('#enlaces').append('<table class="tablesorter"><thead><tr><th>Links</th><th>Size</th><th title="Seeders">Seed</th><th title="Leechers">Leech</th></tr></thead><tbody></tbody></table>');
+                searchRarbg();
+                searchTpb();
+                searchTP();
+                searchTZ2();
+                //final ajax limpiar y ordenar tabla
+                $(document).ajaxStop(function() {
+                    sortTable();
+                    $('table').stacktable();
+                    exit();
+                    $(this).unbind("ajaxStop");
                 });
-        });
+
+            })
+            .fail(function() {
+                console.log("error");
+            })
+            .always(function(json) {
+                console.log("complete");
+
+            });
     }
     //chorrada invaders
     /*  var contador = 0;
