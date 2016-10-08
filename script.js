@@ -518,7 +518,7 @@ jQuery(document).ready(function() {
 
             if (busqueda.replace(/^\D+/g, '').length === 4) {
                 year = busqueda.replace(/^\D+/g, '');
-                busqueda = busqueda.match(/^\D+/g);
+                title = busqueda.match(/^\D+/g);
             } else {
                 year = "";
             }
@@ -526,7 +526,7 @@ jQuery(document).ready(function() {
         //busqueda en omdbapi titulo y año
         jQuery.ajax({
                 //url: 'proxy.php?url=http://www.imdb.com/xml/find?json=1&nr=1&tt=on&q=matrix',
-                url: 'https://www.omdbapi.com/?t=' + busqueda + '&y='+year+ '&r=json',
+                url: 'https://www.omdbapi.com/?t=' + title + '&y='+year+ '&r=json',
                 type: 'GET',
                 dataType: 'json',
 
