@@ -605,7 +605,7 @@ jQuery(document).ready(function() {
                 var video = title + " " + year;
 
                 var id = imdb.replace(/[^0-9\.]+/g, "");
-                $('#descripcion').append('<a target="_blank" href="http://www.opensubtitles.org/en/search/sublanguageid-eng/imdbid-' + id + '/sort-7/asc-0"><i class="fa fa-file-text-o fa-fw fa-2x" aria-hidden="true"></i><span>Subtitles</span></a>');
+                $('#descripcion').append('<a target="_blank" href="http://www.opensubtitles.org/en/search/sublanguageid-eng,spa/imdbid-' + id + '/sort-7/asc-0"><i class="fa fa-file-text-o fa-fw fa-2x" aria-hidden="true"></i><span>Subtitles</span></a>');
                 trailer(video);
 
                 //imdbNota();
