@@ -488,7 +488,9 @@ jQuery(document).ready(function() {
 
     function consulta(origen) {
         console.log('consulta');
-
+        if ($(".alert-danger").length) {
+            return;
+        }
         if (origen === "iconRandom") {
             $('.contenedor').hide();
         }
